@@ -14,78 +14,96 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const (
-	GET_UPDATES_METHOD              = "getUpdates"
-	SEND_MESSAGE_METHOD             = "sendMessage"
-	SUGGEST_CHECK_EMOTION_TEXT      = "Как ты себя сейчас чувствуешь?"
-	MOOD_WAS_ADDED_SUCCESFULLY_TEXT = "Ваша эмоция была успешная сохранена!"
-	GOOD_CALLBACK_DATA              = "good"
-	NORMAL_CALLBACK_DATA            = "normal"
-	BAD_CALLBACK_DATA               = "bad"
-)
-
 func StartBot() {
-	handleResponses()
+	go handleResponses()
+	go sendCategoriesIn12And18()
+	sendEmotionCategories(888558026)
+	for {
+	}
+}
+
+func sendCategoriesIn12And18() {
+	for {
+		now := time.Now()
+		hour := now.Hour()
+
+		// Проверяем 12:00
+		if hour >= 11 && hour <= 13 || hour >= 17 && hour <= 19 {
+			sendEmotionCategories(1033135181)
+			sendEmotionCategories(888558026)
+		}
+
+		// Ждем 1 минуту перед следующей проверкой
+		time.Sleep(6 * time.Hour)
+	}
 }
 
 func handleResponses() {
 	var LastUpdateID int
 
 	for {
-		updates, err := GetUpdates(fmt.Sprint(LastUpdateID))
+		upds, err := GetUpdates(fmt.Sprint(LastUpdateID))
 		if err != nil {
 			panic(err)
 		}
-		for _, update := range updates {
-			if update.MsgInfo != nil {
-				err = sendEmotionsMessage(update.MsgInfo.Chat.Id)
-				fmt.Println("sent message: " + update.MsgInfo.Text)
+
+		for _, upd := range upds {
+			msgText := upd.MsgInfo.Text
+			_, isCategory := emotionCategories[msgText]
+			_, isEmotion := emotions[msgText]
+
+			switch {
+			case checkIfMessage(upd) && !isCategory && !isEmotion:
+				err = sendEmotionCategories(upd.MsgInfo.Chat.Id)
+			case checkIfMessage(upd) && isCategory:
+				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
+			case checkIfMessage(upd) && isEmotion:
+				err = AddMood(upd.MsgInfo.Chat.Id, msgText)
 			}
 			if err != nil {
 				panic(err)
 			}
 
-			if update.CallbackQuery != nil {
-				err = AddMood(update.CallbackQuery.MsgInfo.Chat.Id, update.CallbackQuery.Data)
-				if err != nil {
-					panic(err)
-				}
-				err = SendMessage(update.CallbackQuery.MsgInfo.Chat.Id, MOOD_WAS_ADDED_SUCCESFULLY_TEXT)
-				if err != nil {
-					panic(err)
-				}
-				fmt.Println("sent message: " + update.CallbackQuery.Data)
-			}
-			if err != nil {
-				panic(err)
-			}
-
-			LastUpdateID = update.UpdateId + 1
+			LastUpdateID = upd.Id + 1
 		}
-
 		GetUpdates(fmt.Sprint(LastUpdateID)) // Костыль чтобы пометить последнее сообщение как отработанное
 
 		time.Sleep(2 * time.Second)
 	}
 }
 
-func sendEmotionsMessage(chatId int) error {
-	btns := []inlineKeyboardButton{
-		{Text: "Хорошо", CallbackData: GOOD_CALLBACK_DATA},
-		{Text: "Нормально", CallbackData: NORMAL_CALLBACK_DATA},
-		{Text: "Плохо", CallbackData: BAD_CALLBACK_DATA},
-	}
-
-	return SendMessageWithInlinedButtons(chatId, SUGGEST_CHECK_EMOTION_TEXT, btns)
+func checkIfMessage(upd update) bool {
+	return upd.MsgInfo != nil
 }
 
-func GetUpdates(offset string) (messages []userAction, err error) {
+func sendEmotionCategories(chatId int) error {
+	return sendMessageWithReplyButtons(chatId, suggetCheckEmotionText, emotionCategoryButtons)
+}
+
+func sendEmotionsMessage(chatId int, emotion string) error {
+	switch emotion {
+	case "Радость":
+		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, joyEmotionButtons)
+	case "Грусть":
+		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, sadnessEmotionButtons)
+	case "Злость":
+		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, angerEmotionButtons)
+	case "Страх":
+		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, fearEmotionButtons)
+	case "Спокойствие":
+		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, calmnessEmotionButtons)
+	}
+
+	return nil
+}
+
+func GetUpdates(offset string) (updates []update, err error) {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Ошибка загрузки .env")
 	}
 
 	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
-	uri := BASE_URL + GET_UPDATES_METHOD
+	uri := BASE_URL + getUpdatesMethod
 	client := http.Client{Timeout: 10 * time.Second}
 
 	req, err := http.NewRequest(http.MethodGet, uri, nil)
@@ -117,7 +135,7 @@ func GetUpdates(offset string) (messages []userAction, err error) {
 }
 
 func SendMessage(chatId int, message string) error {
-	client := http.Client{Timeout: 3 * time.Second} // todo don't create client every time, create singleton once
+	client := http.Client{Timeout: 3 * time.Second} // TODO: don't create client every time, create singleton once
 
 	sendingMessage := sentMessage{
 		ChatId:      chatId,
@@ -130,7 +148,7 @@ func SendMessage(chatId int, message string) error {
 	}
 
 	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
-	url := BASE_URL + SEND_MESSAGE_METHOD
+	url := BASE_URL + sendMessageMethod
 	b, err := json.Marshal(sendingMessage)
 	if err != nil {
 		return err
@@ -152,16 +170,16 @@ func SendMessage(chatId int, message string) error {
 	return nil
 }
 
-func SendMessageWithInlinedButtons(chatId int, message string, btns []inlineKeyboardButton) error {
+func sendMessageWithReplyButtons(chatId int, message string, btns []replyKeyboardButton) error {
 	client := http.Client{Timeout: 3 * time.Second}
 
 	sendingMessage := sentMessage{
 		ChatId: chatId,
 		Text:   message,
 		ReplyMarkup: &replyMarkup{
-			[][]inlineKeyboardButton{
-				btns,
-			},
+			ReplyKeyboardButton: [][]replyKeyboardButton{btns},
+			ResizeKeyboard:      true,
+			OneTimeKeyboard:     true,
 		},
 	}
 
@@ -171,7 +189,7 @@ func SendMessageWithInlinedButtons(chatId int, message string, btns []inlineKeyb
 
 	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
 
-	url := BASE_URL + SEND_MESSAGE_METHOD
+	url := BASE_URL + sendMessageMethod
 	b, err := json.Marshal(sendingMessage)
 	if err != nil {
 		panic(err)
@@ -192,3 +210,44 @@ func SendMessageWithInlinedButtons(chatId int, message string, btns []inlineKeyb
 
 	return nil
 }
+
+// func sendMessageWithInlinedButtons(chatId int, message string, btns []inlineKeyboardButton) error {
+// 	client := http.Client{Timeout: 3 * time.Second}
+
+// 	sendingMessage := sentMessage{
+// 		ChatId: chatId,
+// 		Text:   message,
+// 		ReplyMarkup: &replyMarkup{
+// 			[][]inlineKeyboardButton{
+// 				btns,
+// 			},
+// 		},
+// 	}
+
+// 	if err := godotenv.Load(); err != nil {
+// 		log.Fatal("Ошибка загрузки .env")
+// 	}
+
+// 	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
+
+// 	url := BASE_URL + sendMessageMethod
+// 	b, err := json.Marshal(sendingMessage)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(b))
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	req.Header.Add("Content-Type", "application/json")
+// 	req.Header.Add("Accept", "application/json")
+
+// 	_, err = client.Do(req)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	return nil
+// }

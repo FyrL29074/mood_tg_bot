@@ -2,12 +2,12 @@ package telegram
 
 // getting models
 type getUpdatesResponse struct {
-	Ok          bool         `json:"ok"`
-	UserActions []userAction `json:"result"`
+	Ok          bool     `json:"ok"`
+	UserActions []update `json:"result"`
 }
 
-type userAction struct {
-	UpdateId      int            `json:"update_id"`
+type update struct {
+	Id            int            `json:"update_id"`
 	MsgInfo       *msgInfo       `json:"message,omitempty"`
 	CallbackQuery *callbackQuery `json:"callback_query,omitempty"`
 }
@@ -34,10 +34,17 @@ type sentMessage struct {
 }
 
 type replyMarkup struct {
-	InlineKeyboard [][]inlineKeyboardButton `json:"inline_keyboard"`
+	// InlineKeyboard  [][]inlineKeyboardButton `json:"inline_keyboard,omitempty"`
+	ReplyKeyboardButton [][]replyKeyboardButton `json:"keyboard,omitempty"`
+	ResizeKeyboard      bool                    `json:"resize_keyboard,omitempty"`
+	OneTimeKeyboard     bool                    `json:"one_time_keyboard,omitempty"`
 }
 
-type inlineKeyboardButton struct {
-	Text         string `json:"text"`
-	CallbackData string `json:"callback_data"`
+type replyKeyboardButton struct {
+	Text string `json:"text"`
 }
+
+// type inlineKeyboardButton struct {
+// 	Text         string `json:"text"`
+// 	CallbackData string `json:"callback_data"`
+// }
