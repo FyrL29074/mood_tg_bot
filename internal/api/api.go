@@ -18,10 +18,8 @@ import (
 )
 
 func StartBot() {
-	go handleResponses()
 	SendEmotionCategories(888558026)
-	for {
-	}
+	handleResponses()
 }
 
 func addMoodGRPC(chatId int, mood string) error {
