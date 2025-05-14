@@ -19,7 +19,7 @@ func (s *server) AddMood(context context.Context, req *storagepb.AddMoodRequest)
 	if err != nil {
 		return nil, err
 	}
-	return &storagepb.AddMoodResponse{Status: "Success"}, nil
+	return &storagepb.AddMoodResponse{Status: "Ok"}, nil
 }
 
 func main() {

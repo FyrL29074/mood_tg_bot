@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "pb/apipb";
+
+package apipb;
+
+service ApiService {
+    rpc SendEmotionCategories(SendEmotionCategoriesRequest) returns (SendEmotionCategoriesResponse);
+}
+
+message SendEmotionCategoriesRequest {
+    int64 chat_id = 1;
+}
+
+message SendEmotionCategoriesResponse {
+    string status = 1;
+}

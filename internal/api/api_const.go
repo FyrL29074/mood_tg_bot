@@ -1,4 +1,4 @@
-package telegram
+package api
 
 const (
 	getUpdatesMethod            = "getUpdates"

@@ -1,4 +1,4 @@
-package telegram
+package api
 
 import (
 	"bytes"
@@ -19,14 +19,13 @@ import (
 
 func StartBot() {
 	go handleResponses()
-	go sendCategoriesIn12And18()
-	sendEmotionCategories(888558026)
+	SendEmotionCategories(888558026)
 	for {
 	}
 }
 
 func addMoodGRPC(chatId int, mood string) error {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		return err
 	}
@@ -38,22 +37,6 @@ func addMoodGRPC(chatId int, mood string) error {
 		Mood:   mood,
 	})
 	return err
-}
-
-func sendCategoriesIn12And18() {
-	for {
-		now := time.Now()
-		hour := now.Hour()
-
-		// Проверяем 12:00
-		if hour >= 11 && hour <= 13 || hour >= 17 && hour <= 19 {
-			sendEmotionCategories(1033135181)
-			sendEmotionCategories(888558026)
-		}
-
-		// Ждем 1 минуту перед следующей проверкой
-		time.Sleep(6 * time.Hour)
-	}
 }
 
 func handleResponses() {
@@ -72,7 +55,7 @@ func handleResponses() {
 
 			switch {
 			case checkIfMessage(upd) && !isCategory && !isEmotion:
-				err = sendEmotionCategories(upd.MsgInfo.Chat.Id)
+				err = SendEmotionCategories(upd.MsgInfo.Chat.Id)
 			case checkIfMessage(upd) && isCategory:
 				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
 			case checkIfMessage(upd) && isEmotion:
@@ -94,7 +77,7 @@ func checkIfMessage(upd update) bool {
 	return upd.MsgInfo != nil
 }
 
-func sendEmotionCategories(chatId int) error {
+func SendEmotionCategories(chatId int) error {
 	return sendMessageWithReplyButtons(chatId, suggetCheckEmotionText, emotionCategoryButtons)
 }
 

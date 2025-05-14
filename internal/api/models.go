@@ -1,4 +1,4 @@
-package telegram
+package api
 
 // getting models
 type getUpdatesResponse struct {
