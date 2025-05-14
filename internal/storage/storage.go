@@ -1,4 +1,4 @@
-package telegram
+package storage
 
 import (
 	"database/sql"
@@ -8,7 +8,7 @@ import (
 
 var db *sql.DB
 
-func AddMood(chat_id int, mood string) error {
+func AddMoodToDb(chat_id int, mood string) error {
 	InitDb()
 
 	query := `

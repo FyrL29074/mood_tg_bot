@@ -2,16 +2,19 @@ package telegram
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
+	"mood_tg_bot/pb/storagepb"
 	"net/http"
 	"net/url"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 )
 
 func StartBot() {
@@ -20,6 +23,21 @@ func StartBot() {
 	sendEmotionCategories(888558026)
 	for {
 	}
+}
+
+func addMoodGRPC(chatId int, mood string) error {
+	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	client := storagepb.NewStorageServiceClient(conn)
+	_, err = client.AddMood(context.Background(), &storagepb.AddMoodRequest{
+		ChatId: int64(chatId),
+		Mood:   mood,
+	})
+	return err
 }
 
 func sendCategoriesIn12And18() {
@@ -58,7 +76,7 @@ func handleResponses() {
 			case checkIfMessage(upd) && isCategory:
 				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
 			case checkIfMessage(upd) && isEmotion:
-				err = AddMood(upd.MsgInfo.Chat.Id, msgText)
+				err = addMoodGRPC(upd.MsgInfo.Chat.Id, msgText)
 			}
 			if err != nil {
 				panic(err)

@@ -6,53 +6,6 @@ const (
 	suggetCheckEmotionText      = "Как ты себя сейчас чувствуешь?"
 	moodWasSuccesfullyAddedText = "Ваша эмоция была успешная сохранена!"
 	chooseYourEmotion           = "Выбери эмоцию"
-
-	joyCategoryCallbackData      = "joy"
-	sadnessCategoryCallbackData  = "sadness"
-	angerCategoryCallbackData    = "anger"
-	fearCategoryCallbackData     = "fear"
-	calmnessCategoryCallbackData = "calmness"
-
-	// Радость
-	joyCallbackData       = "joy"
-	happinessCallbackData = "happiness"
-	pleasureCallbackData  = "pleasure"
-	delightCallbackData   = "delight"
-	prideCallbackData     = "pride"
-	gratitudeCallbackData = "gratitud"
-	hopeCallbackData      = "hope"
-
-	// Грусть
-	sadnessCallbackData = "sadness"
-	// SadnessCallbackData             = "Joy"
-	lonelinessCallbackData     = "loneliness"
-	disappointmentCallbackData = "disappointment"
-	wineCallbackData           = "wine"
-	regretCallbackData         = "regret"
-	fatigueCallbackData        = "fatigue"
-
-	// Злость
-	angerCallbackData       = "anger"
-	irritationCallbackData  = "irritation"
-	indignationCallbackData = "indignation"
-	hateCallbackData        = "hate"
-	envyCallbackData        = "envy"
-
-	// Страх
-	fearCallbackData      = "fear"
-	alarmCallbackData     = "alarm"
-	panicCallbackData     = "panic"
-	frightCallbackData    = "fright"
-	shameCallbackData     = "shame"
-	confusionCallbackData = "confusion"
-
-	// Спокойствие
-	calmnessCallbackData     = "calmness"
-	pacificationCallbackData = "pacification"
-	satisfactionCallbackData = "satisfaction"
-	serenityCallbackData     = "serenity"
-	relaxationCallbackData   = "relaxation"
-	indifferenceCallbackData = "indifference"
 )
 
 var emotionCategories = map[string]struct{}{
