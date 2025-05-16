@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func SendCategoriesIn12And18() {
@@ -22,7 +23,8 @@ func SendCategoriesIn12And18() {
 }
 
 func sendEmotionCategoriesGRPC(chatId int) error {
-	conn, err := grpc.NewClient("localhost:50052", grpc.WithInsecure())
+	conn, err := grpc.NewClient("api:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
+
 	if err != nil {
 		return nil
 	}

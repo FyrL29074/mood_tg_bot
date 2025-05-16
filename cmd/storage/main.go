@@ -23,7 +23,8 @@ func (s *server) AddMood(context context.Context, req *storagepb.AddMoodRequest)
 }
 
 func main() {
-	listen, err := net.Listen("tcp", ":50051")
+	fmt.Println("Starting storage service...")
+	listen, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
 		panic(err)
 	}

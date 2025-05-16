@@ -24,9 +24,10 @@ func (s *server) SendEmotionCategories(ctx context.Context, req *apipb.SendEmoti
 }
 
 func main() {
+	fmt.Println("Starting api service...")
 	go api.StartBot()
 
-	listen, err := net.Listen("tcp", ":50052")
+	listen, err := net.Listen("tcp", "0.0.0.0:50052")
 	if err != nil {
 		panic(err)
 	}

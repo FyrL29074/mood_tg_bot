@@ -1,0 +1,48 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.api
+    environment:
+      - TELEGRAM_BASE_URL_WITH_TOKEN=${TELEGRAM_BASE_URL_WITH_TOKEN}
+    volumes:
+      - ./.env:/app/.env:ro
+    ports:
+      - "8080:50052"
+    networks:
+      - moodnet
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    mem_limit: 256m
+
+  notification:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.notification
+    networks:
+      - moodnet
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    mem_limit: 256m
+
+  storage:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.storage
+    ports:
+      - "8081:50051"
+    networks:
+      - moodnet
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    mem_limit: 256m
+
+networks:
+  moodnet:
+    driver: bridge

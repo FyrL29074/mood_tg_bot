@@ -15,6 +15,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func StartBot() {
@@ -23,7 +24,7 @@ func StartBot() {
 }
 
 func addMoodGRPC(chatId int, mood string) error {
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.NewClient("storage:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return err
 	}
@@ -58,6 +59,10 @@ func handleResponses() {
 				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
 			case checkIfMessage(upd) && isEmotion:
 				err = addMoodGRPC(upd.MsgInfo.Chat.Id, msgText)
+				if err != nil {
+					panic(err)
+				}
+				err = SendMessage(upd.MsgInfo.Chat.Id, moodWasSuccesfullyAddedText)
 			}
 			if err != nil {
 				panic(err)
