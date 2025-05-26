@@ -43,6 +43,27 @@ services:
           memory: 256M
     mem_limit: 256m
 
+  zookeeper:
+      image: confluentinc/cp-zookeeper:7.5.0
+      environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+      networks:
+        - moodnet
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    networks:
+      - moodnet
+
 networks:
   moodnet:
     driver: bridge

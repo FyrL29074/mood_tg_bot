@@ -20,6 +20,7 @@ import (
 
 func StartBot() {
 	SendEmotionCategories(888558026)
+	InitKafkaWriter()
 	handleResponses()
 }
 
@@ -58,7 +59,8 @@ func handleResponses() {
 			case checkIfMessage(upd) && isCategory:
 				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
 			case checkIfMessage(upd) && isEmotion:
-				err = addMoodGRPC(upd.MsgInfo.Chat.Id, msgText)
+				// err = addMoodGRPC(upd.MsgInfo.Chat.Id, msgText)
+				err = SendMoodToKafka(upd.MsgInfo.Chat.Id, msgText)
 				if err != nil {
 					panic(err)
 				}
