@@ -17,7 +17,7 @@ func SendCategoriesIn12And18() {
 
 		time.Sleep(duration)
 
-		// sendEmotionCategories(1033135181)
+		sendEmotionCategoriesGRPC(1033135181)
 		sendEmotionCategoriesGRPC(888558026)
 	}
 }
