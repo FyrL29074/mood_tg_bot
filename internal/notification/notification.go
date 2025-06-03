@@ -24,9 +24,8 @@ func SendCategoriesIn12And18() {
 
 func sendEmotionCategoriesGRPC(chatId int) error {
 	conn, err := grpc.NewClient("api:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
-
 	if err != nil {
-		return nil
+		return err
 	}
 	defer conn.Close()
 

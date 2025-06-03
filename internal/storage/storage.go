@@ -9,7 +9,9 @@ import (
 var db *sql.DB
 
 func AddMoodToDb(chat_id int, mood string) error {
-	InitDb()
+	if err := InitDb(); err != nil {
+		return err
+	}
 
 	query := `
 		INSERT INTO mood(mood, chat_id)
