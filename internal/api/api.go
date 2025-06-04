@@ -2,41 +2,22 @@ package api
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
-	"mood_tg_bot/pb/storagepb"
 	"net/http"
 	"net/url"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 func StartBot() {
 	SendEmotionCategories(888558026)
 	InitKafkaWriter()
 	handleResponses()
-}
-
-func addMoodGRPC(chatId int, mood string) error {
-	conn, err := grpc.NewClient("storage:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-
-	client := storagepb.NewStorageServiceClient(conn)
-	_, err = client.AddMood(context.Background(), &storagepb.AddMoodRequest{
-		ChatId: int64(chatId),
-		Mood:   mood,
-	})
-	return err
 }
 
 func handleResponses() {

@@ -15,29 +15,27 @@ func StartKafkaConsumer() {
 		GroupID: "storage-group",
 	})
 
-	go func() {
-		for {
-			m, err := r.ReadMessage(context.Background())
-			if err != nil {
-				log.Printf("Kafka error: %v", err)
-				continue
-			}
-
-			var moodMsg MoodMessage
-			err = json.Unmarshal(m.Value, &moodMsg)
-			if err != nil {
-				log.Printf("Kafka error: %v", err)
-				continue
-			}
-
-			err = AddMoodToDb(moodMsg.ChatId, moodMsg.Mood)
-			if err != nil {
-				log.Printf("Ошибка записи в БД: %v", err)
-			} else {
-				log.Printf("Добавлено настроение для %d: %s", moodMsg.ChatId, moodMsg.Mood)
-			}
+	for {
+		m, err := r.ReadMessage(context.Background())
+		if err != nil {
+			log.Printf("Kafka error: %v", err)
+			continue
 		}
-	}()
+
+		var moodMsg MoodMessage
+		err = json.Unmarshal(m.Value, &moodMsg)
+		if err != nil {
+			log.Printf("Kafka error: %v", err)
+			continue
+		}
+
+		err = AddMoodToDb(moodMsg.ChatId, moodMsg.Mood)
+		if err != nil {
+			log.Printf("Ошибка записи в БД: %v", err)
+		} else {
+			log.Printf("Добавлено настроение для %d: %s", moodMsg.ChatId, moodMsg.Mood)
+		}
+	}
 }
 
 type MoodMessage struct {
