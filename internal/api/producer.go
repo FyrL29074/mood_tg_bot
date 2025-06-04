@@ -3,13 +3,29 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"log"
+	"net"
+	"time"
 
 	"github.com/segmentio/kafka-go"
 )
 
 var kafkaWriter *kafka.Writer
 
+func waitForKafka() {
+	for {
+		conn, err := net.Dial("tcp", "kafka:9092")
+		if err == nil {
+			_ = conn.Close()
+			break
+		}
+		log.Println("Ожидание Kafka...")
+		time.Sleep(3 * time.Second)
+	}
+}
+
 func InitKafkaWriter() {
+	waitForKafka()
 	kafkaWriter = &kafka.Writer{
 		Addr:     kafka.TCP("kafka:9092"),
 		Topic:    "mood-events",

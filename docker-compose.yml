@@ -11,6 +11,8 @@ services:
       - "8080:50052"
     networks:
       - moodnet
+    depends_on:
+      - kafka
     deploy:
       resources:
         limits:
@@ -37,6 +39,8 @@ services:
       - "8081:50051"
     networks:
       - moodnet
+    depends_on:
+      - kafka
     deploy:
       resources:
         limits:
@@ -57,6 +61,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     depends_on:
       - zookeeper
     ports:
