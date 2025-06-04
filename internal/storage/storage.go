@@ -31,7 +31,7 @@ func InitDb() error {
 	}
 
 	var err error
-	db, err = sql.Open("sqlite3", "mood.db")
+	db, err = sql.Open("sqlite3", "/app/data/mood.db")
 	if err != nil {
 		return err
 	}

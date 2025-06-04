@@ -41,6 +41,8 @@ services:
       - moodnet
     depends_on:
       - kafka
+    volumes:
+      - ./storage_data:/app/data
     deploy:
       resources:
         limits:
