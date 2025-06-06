@@ -21,11 +21,6 @@ func StartBot() {
 }
 
 func handleResponses() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Ошибка загрузки .env")
-	}
-	photoID := os.Getenv("PHOTO_ID")
-
 	var LastUpdateID int
 	for {
 		upds, err := GetUpdates(fmt.Sprint(LastUpdateID))
@@ -40,7 +35,7 @@ func handleResponses() {
 
 			switch {
 			case checkIfMessage(upd) && !isCategory && !isEmotion:
-				err = sendPhoto(upd.MsgInfo.Chat.Id, photoID, suggetCheckEmotionText)
+				err = SendPhoto(upd.MsgInfo.Chat.Id)
 			case checkIfMessage(upd) && isCategory:
 				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
 			case checkIfMessage(upd) && isEmotion:
@@ -201,7 +196,14 @@ func sendMessageWithReplyButtons(chatId int, message string, btns []replyKeyboar
 	return nil
 }
 
-func sendPhoto(chatId int, photoID string, caption string) error {
+func SendPhoto(chatId int) error {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Ошибка загрузки .env")
+	}
+	photoID := os.Getenv("PHOTO_ID")
+
+	caption := suggetCheckEmotionText
+
 	client := http.Client{Timeout: 3 * time.Second}
 
 	if err := godotenv.Load(); err != nil {
