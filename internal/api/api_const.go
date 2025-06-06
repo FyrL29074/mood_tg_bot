@@ -3,6 +3,7 @@ package api
 const (
 	getUpdatesMethod            = "getUpdates"
 	sendMessageMethod           = "sendMessage"
+	sendPhotoMethod             = "sendPhoto"
 	suggetCheckEmotionText      = "Как ты себя сейчас чувствуешь?"
 	moodWasSuccesfullyAddedText = "Ваша эмоция была успешная сохранена!"
 	chooseYourEmotion           = "Выбери эмоцию"

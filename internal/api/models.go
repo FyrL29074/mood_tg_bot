@@ -44,6 +44,13 @@ type replyKeyboardButton struct {
 	Text string `json:"text"`
 }
 
+type sentPhoto struct {
+	ChatId      int          `json:"chat_id"`
+	Photo       string       `json:"photo"`
+	Caption     string       `json:"caption"`
+	ReplyMarkup *replyMarkup `json:"reply_markup,omitempty"`
+}
+
 // type inlineKeyboardButton struct {
 // 	Text         string `json:"text"`
 // 	CallbackData string `json:"callback_data"`

@@ -21,8 +21,12 @@ func StartBot() {
 }
 
 func handleResponses() {
-	var LastUpdateID int
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Ошибка загрузки .env")
+	}
+	photoID := os.Getenv("PHOTO_ID")
 
+	var LastUpdateID int
 	for {
 		upds, err := GetUpdates(fmt.Sprint(LastUpdateID))
 		if err != nil {
@@ -36,11 +40,10 @@ func handleResponses() {
 
 			switch {
 			case checkIfMessage(upd) && !isCategory && !isEmotion:
-				err = SendEmotionCategories(upd.MsgInfo.Chat.Id)
+				err = sendPhoto(upd.MsgInfo.Chat.Id, photoID, suggetCheckEmotionText)
 			case checkIfMessage(upd) && isCategory:
 				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
 			case checkIfMessage(upd) && isEmotion:
-				// err = addMoodGRPC(upd.MsgInfo.Chat.Id, msgText)
 				err = SendMoodToKafka(upd.MsgInfo.Chat.Id, msgText)
 				if err != nil {
 					panic(err)
@@ -178,6 +181,47 @@ func sendMessageWithReplyButtons(chatId int, message string, btns []replyKeyboar
 
 	url := BASE_URL + sendMessageMethod
 	b, err := json.Marshal(sendingMessage)
+	if err != nil {
+		panic(err)
+	}
+
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(b))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Accept", "application/json")
+
+	_, err = client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func sendPhoto(chatId int, photoID string, caption string) error {
+	client := http.Client{Timeout: 3 * time.Second}
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Ошибка загрузки .env")
+	}
+	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
+
+	sendingPhoto := sentPhoto{
+		ChatId:  chatId,
+		Photo:   photoID,
+		Caption: caption,
+		ReplyMarkup: &replyMarkup{
+			ReplyKeyboardButton: [][]replyKeyboardButton{emotionCategoryButtons},
+			ResizeKeyboard:      true,
+			OneTimeKeyboard:     true,
+		},
+	}
+
+	url := BASE_URL + sendPhotoMethod
+	b, err := json.Marshal(sendingPhoto)
 	if err != nil {
 		panic(err)
 	}
