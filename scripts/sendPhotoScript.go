@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	err := sendLocalPhoto(888558026, "assets/mood.png", "тест, чтобы отправить фотку")
+	err := sendLocalPhoto(888558026, "assets/mood2.png", "тест, чтобы отправить фотку")
 	if err != nil {
 		panic(err)
 	}
