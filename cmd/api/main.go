@@ -15,7 +15,7 @@ type server struct {
 }
 
 func (s *server) SendEmotionCategories(ctx context.Context, req *apipb.SendEmotionCategoriesRequest) (*apipb.SendEmotionCategoriesResponse, error) {
-	err := api.SendPhoto(int(req.ChatId))
+	err := api.SendPhoto(int(req.ChatId), api.SuggetCheckEmotionText)
 	if err != nil {
 		return nil, err
 	}

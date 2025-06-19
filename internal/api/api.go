@@ -29,21 +29,35 @@ func handleResponses() {
 		}
 
 		for _, upd := range upds {
-			msgText := upd.MsgInfo.Text
-			_, isCategory := emotionCategories[msgText]
-			_, isEmotion := emotions[msgText]
+
+			callbackData := ""
+			if upd.CallbackQuery != nil {
+				callbackData = upd.CallbackQuery.Data
+			}
+
+			var chatId int
+			if upd.CallbackQuery != nil {
+				chatId = upd.CallbackQuery.MsgInfo.Chat.Id
+			} else {
+				chatId = upd.MsgInfo.Chat.Id
+			}
+
+			_, isCategory := emotionCategories[callbackData]
+			_, isEmotion := emotions[callbackData]
+			isMessage := upd.MsgInfo != nil
+			isBackSymbol := callbackData == backSymbol
 
 			switch {
-			case checkIfMessage(upd) && !isCategory && !isEmotion:
-				err = SendPhoto(upd.MsgInfo.Chat.Id)
-			case checkIfMessage(upd) && isCategory:
-				err = sendEmotionsMessage(upd.MsgInfo.Chat.Id, msgText)
-			case checkIfMessage(upd) && isEmotion:
-				err = SendMoodToKafka(upd.MsgInfo.Chat.Id, msgText)
+			case isMessage || isBackSymbol || (!isCategory && !isEmotion):
+				err = SendPhoto(chatId, SuggetCheckEmotionText)
+			case isCategory:
+				err = sendEmotionsMessage(chatId, callbackData)
+			case isEmotion:
+				err = SendMoodToKafka(chatId, callbackData)
 				if err != nil {
 					panic(err)
 				}
-				err = SendMessage(upd.MsgInfo.Chat.Id, moodWasSuccesfullyAddedText)
+				err = sendMessage(chatId, moodWasSuccesfullyAddedText, nil)
 			}
 			if err != nil {
 				panic(err)
@@ -57,26 +71,22 @@ func handleResponses() {
 	}
 }
 
-func checkIfMessage(upd update) bool {
-	return upd.MsgInfo != nil
-}
-
 func SendEmotionCategories(chatId int) error {
-	return sendMessageWithReplyButtons(chatId, suggetCheckEmotionText, emotionCategoryButtons)
+	return sendMessage(chatId, SuggetCheckEmotionText, emotionCategoryButtons)
 }
 
 func sendEmotionsMessage(chatId int, emotion string) error {
 	switch emotion {
 	case "Радость":
-		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, joyEmotionButtons)
+		return sendMessage(chatId, chooseYourEmotion, joyEmotionButtons)
 	case "Грусть":
-		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, sadnessEmotionButtons)
+		return sendMessage(chatId, chooseYourEmotion, sadnessEmotionButtons)
 	case "Злость":
-		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, angerEmotionButtons)
+		return sendMessage(chatId, chooseYourEmotion, angerEmotionButtons)
 	case "Страх":
-		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, fearEmotionButtons)
+		return sendMessage(chatId, chooseYourEmotion, fearEmotionButtons)
 	case "Спокойствие":
-		return sendMessageWithReplyButtons(chatId, chooseYourEmotion, calmnessEmotionButtons)
+		return sendMessage(chatId, chooseYourEmotion, calmnessEmotionButtons)
 	}
 
 	return nil
@@ -119,52 +129,14 @@ func GetUpdates(offset string) (updates []update, err error) {
 	return updatesResponse.UserActions, nil
 }
 
-func SendMessage(chatId int, message string) error {
-	client := http.Client{Timeout: 3 * time.Second} // TODO: don't create client every time, create singleton once
-
-	sendingMessage := sentMessage{
-		ChatId:      chatId,
-		Text:        message,
-		ReplyMarkup: nil,
-	}
-
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Ошибка загрузки .env")
-	}
-
-	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
-	url := BASE_URL + sendMessageMethod
-	b, err := json.Marshal(sendingMessage)
-	if err != nil {
-		return err
-	}
-
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(b))
-	if err != nil {
-		return err
-	}
-
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Accept", "application/json")
-
-	_, err = client.Do(req)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func sendMessageWithReplyButtons(chatId int, message string, btns []replyKeyboardButton) error {
+func sendMessage(chatId int, message string, btns [][]inlineKeyboardButton) error {
 	client := http.Client{Timeout: 3 * time.Second}
 
 	sendingMessage := sentMessage{
 		ChatId: chatId,
 		Text:   message,
 		ReplyMarkup: &replyMarkup{
-			ReplyKeyboardButton: [][]replyKeyboardButton{btns},
-			ResizeKeyboard:      true,
-			OneTimeKeyboard:     true,
+			btns,
 		},
 	}
 
@@ -196,13 +168,11 @@ func sendMessageWithReplyButtons(chatId int, message string, btns []replyKeyboar
 	return nil
 }
 
-func SendPhoto(chatId int) error {
+func SendPhoto(chatId int, caption string) error {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Ошибка загрузки .env")
 	}
 	photoID := os.Getenv("PHOTO_ID")
-
-	caption := suggetCheckEmotionText
 
 	client := http.Client{Timeout: 3 * time.Second}
 
@@ -216,9 +186,7 @@ func SendPhoto(chatId int) error {
 		Photo:   photoID,
 		Caption: caption,
 		ReplyMarkup: &replyMarkup{
-			ReplyKeyboardButton: [][]replyKeyboardButton{emotionCategoryButtons},
-			ResizeKeyboard:      true,
-			OneTimeKeyboard:     true,
+			InlineKeyboard: emotionCategoryButtons,
 		},
 	}
 
@@ -243,44 +211,3 @@ func SendPhoto(chatId int) error {
 
 	return nil
 }
-
-// func sendMessageWithInlinedButtons(chatId int, message string, btns []inlineKeyboardButton) error {
-// 	client := http.Client{Timeout: 3 * time.Second}
-
-// 	sendingMessage := sentMessage{
-// 		ChatId: chatId,
-// 		Text:   message,
-// 		ReplyMarkup: &replyMarkup{
-// 			[][]inlineKeyboardButton{
-// 				btns,
-// 			},
-// 		},
-// 	}
-
-// 	if err := godotenv.Load(); err != nil {
-// 		log.Fatal("Ошибка загрузки .env")
-// 	}
-
-// 	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
-
-// 	url := BASE_URL + sendMessageMethod
-// 	b, err := json.Marshal(sendingMessage)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(b))
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	req.Header.Add("Content-Type", "application/json")
-// 	req.Header.Add("Accept", "application/json")
-
-// 	_, err = client.Do(req)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }

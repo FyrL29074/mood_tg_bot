@@ -4,9 +4,10 @@ const (
 	getUpdatesMethod            = "getUpdates"
 	sendMessageMethod           = "sendMessage"
 	sendPhotoMethod             = "sendPhoto"
-	suggetCheckEmotionText      = "Как ты себя сейчас чувствуешь?"
+	SuggetCheckEmotionText      = "Как ты себя сейчас чувствуешь?"
 	moodWasSuccesfullyAddedText = "Ваша эмоция была успешная сохранена!"
 	chooseYourEmotion           = "Выбери эмоцию"
+	backSymbol                  = "←"
 )
 
 var emotionCategories = map[string]struct{}{
@@ -17,93 +18,98 @@ var emotionCategories = map[string]struct{}{
 	"Спокойствие": {},
 }
 
-var emotionCategoryButtons = []replyKeyboardButton{
-	{Text: "Радость"},
-	{Text: "Грусть"},
-	{Text: "Злость"},
-	{Text: "Страх"},
-	{Text: "Спокойствие"},
+var emotionCategoryButtons = [][]inlineKeyboardButton{
+	{{Text: "Радость", CallbackData: "Радость"}},
+	{{Text: "Грусть", CallbackData: "Грусть"}},
+	{{Text: "Злость", CallbackData: "Злость"}},
+	{{Text: "Страх", CallbackData: "Страх"}},
+	{{Text: "Спокойствие", CallbackData: "Спокойствие"}},
 }
 
 var emotions = map[string]struct{}{
 	// Радость
-	"Счастье":       struct{}{},
-	"Удовольствие":  struct{}{},
-	"Восторг":       struct{}{},
-	"Гордость":      struct{}{},
-	"Благодарность": struct{}{},
-	"Надежда":       struct{}{},
+	"Счастье":       {},
+	"Удовольствие":  {},
+	"Восторг":       {},
+	"Гордость":      {},
+	"Благодарность": {},
+	"Надежда":       {},
 
 	// Грусть
-	"Разочарование": struct{}{},
-	"Сожаление":     struct{}{},
-	"Усталость":     struct{}{},
-	"Одиночество":   struct{}{},
-	"Вина":          struct{}{},
-	"Печаль":        struct{}{},
+	"Разочарование": {},
+	"Сожаление":     {},
+	"Усталость":     {},
+	"Одиночество":   {},
+	"Вина":          {},
+	"Печаль":        {},
 
 	// Злость
-	"Раздражение": struct{}{},
-	"Возмущение":  struct{}{},
-	"Зависть":     struct{}{},
-	"Ненависть":   struct{}{},
-	"Гнев":        struct{}{},
+	"Раздражение": {},
+	"Возмущение":  {},
+	"Зависть":     {},
+	"Ненависть":   {},
+	"Гнев":        {},
 
 	// Страх
-	"Растерянность": struct{}{},
-	"Опасение":      struct{}{},
-	"Стыд":          struct{}{},
-	"Испуг":         struct{}{},
-	"Тревога":       struct{}{},
-	"Паника":        struct{}{},
+	"Растерянность": {},
+	"Опасение":      {},
+	"Стыд":          {},
+	"Испуг":         {},
+	"Тревога":       {},
+	"Паника":        {},
 
 	// Спокойствие
-	"Умиротворение":   struct{}{},
-	"Удовлетворение":  struct{}{},
-	"Безмятежность":   struct{}{},
-	"Расслабленность": struct{}{},
-	"Равнодушие":      struct{}{},
+	"Умиротворение":   {},
+	"Удовлетворение":  {},
+	"Безмятежность":   {},
+	"Расслабленность": {},
+	"Равнодушие":      {},
 }
 
-var joyEmotionButtons = []replyKeyboardButton{
-	{Text: "Счастье"},
-	{Text: "Удовольствие"},
-	{Text: "Восторг"},
-	{Text: "Гордость"},
-	{Text: "Благодарность"},
-	{Text: "Надежда"},
+var joyEmotionButtons = [][]inlineKeyboardButton{
+	{{Text: "Счастье", CallbackData: "Счастье"}},
+	{{Text: "Удовольствие", CallbackData: "Удовольствие"}},
+	{{Text: "Восторг", CallbackData: "Восторг"}},
+	{{Text: "Гордость", CallbackData: "Гордость"}},
+	{{Text: "Благодарность", CallbackData: "Благодарность"}},
+	{{Text: "Надежда", CallbackData: "Надежда"}},
+	{{Text: backSymbol, CallbackData: backSymbol}},
 }
 
-var sadnessEmotionButtons = []replyKeyboardButton{
-	{Text: "Разочарование"},
-	{Text: "Сожаление"},
-	{Text: "Усталость"},
-	{Text: "Одиночество"},
-	{Text: "Вина"},
-	{Text: "Печаль"},
+var sadnessEmotionButtons = [][]inlineKeyboardButton{
+	{{Text: "Разочарование", CallbackData: "Разочарование"}},
+	{{Text: "Сожаление", CallbackData: "Сожаление"}},
+	{{Text: "Усталость", CallbackData: "Усталость"}},
+	{{Text: "Одиночество", CallbackData: "Одиночество"}},
+	{{Text: "Вина", CallbackData: "Вина"}},
+	{{Text: "Печаль", CallbackData: "Печаль"}},
+	{{Text: backSymbol, CallbackData: backSymbol}},
 }
 
-var angerEmotionButtons = []replyKeyboardButton{
-	{Text: "Раздражение"},
-	{Text: "Возмущение"},
-	{Text: "Зависть"},
-	{Text: "Ненависть"},
-	{Text: "Гнев"},
+var angerEmotionButtons = [][]inlineKeyboardButton{
+	{{Text: "Раздражение", CallbackData: "Раздражение"}},
+	{{Text: "Возмущение", CallbackData: "Возмущение"}},
+	{{Text: "Зависть", CallbackData: "Зависть"}},
+	{{Text: "Ненависть", CallbackData: "Ненависть"}},
+	{{Text: "Гнев", CallbackData: "Гнев"}},
+	{{Text: backSymbol, CallbackData: backSymbol}},
 }
 
-var fearEmotionButtons = []replyKeyboardButton{
-	{Text: "Растерянность"},
-	{Text: "Опасение"},
-	{Text: "Стыд"},
-	{Text: "Испуг"},
-	{Text: "Тревога"},
-	{Text: "Паника"},
+var fearEmotionButtons = [][]inlineKeyboardButton{
+	{{Text: "Растерянность", CallbackData: "Растерянность"}},
+	{{Text: "Опасение", CallbackData: "Опасение"}},
+	{{Text: "Стыд", CallbackData: "Стыд"}},
+	{{Text: "Испуг", CallbackData: "Испуг"}},
+	{{Text: "Тревога", CallbackData: "Тревога"}},
+	{{Text: "Паника", CallbackData: "Паника"}},
+	{{Text: backSymbol, CallbackData: backSymbol}},
 }
 
-var calmnessEmotionButtons = []replyKeyboardButton{
-	{Text: "Умиротворение"},
-	{Text: "Удовлетворение"},
-	{Text: "Безмятежность"},
-	{Text: "Расслабленность"},
-	{Text: "Равнодушие"},
+var calmnessEmotionButtons = [][]inlineKeyboardButton{
+	{{Text: "Умиротворение", CallbackData: "Умиротворение"}},
+	{{Text: "Удовлетворение", CallbackData: "Удовлетворение"}},
+	{{Text: "Безмятежность", CallbackData: "Безмятежность"}},
+	{{Text: "Расслабленность", CallbackData: "Расслабленность"}},
+	{{Text: "Равнодушие", CallbackData: "Равнодушие"}},
+	{{Text: backSymbol, CallbackData: backSymbol}},
 }
