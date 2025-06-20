@@ -15,9 +15,17 @@ import (
 )
 
 func StartBot() {
-	SendEmotionCategories(888558026)
+	SendPhoto(888558026, SuggetCheckEmotionText)
+
 	InitKafkaWriter()
+	initApi()
 	handleResponses()
+}
+
+var client *http.Client
+
+func initApi() {
+	client = &http.Client{Timeout: 10 * time.Second}
 }
 
 func handleResponses() {
@@ -99,7 +107,6 @@ func GetUpdates(offset string) (updates []update, err error) {
 
 	BASE_URL := os.Getenv("TELEGRAM_BASE_URL_WITH_TOKEN")
 	uri := BASE_URL + getUpdatesMethod
-	client := http.Client{Timeout: 10 * time.Second}
 
 	req, err := http.NewRequest(http.MethodGet, uri, nil)
 	if err != nil {
@@ -130,8 +137,6 @@ func GetUpdates(offset string) (updates []update, err error) {
 }
 
 func sendMessage(chatId int, message string, btns [][]inlineKeyboardButton) error {
-	client := http.Client{Timeout: 3 * time.Second}
-
 	sendingMessage := sentMessage{
 		ChatId: chatId,
 		Text:   message,
@@ -173,8 +178,6 @@ func SendPhoto(chatId int, caption string) error {
 		log.Fatal("Ошибка загрузки .env")
 	}
 	photoID := os.Getenv("PHOTO_ID")
-
-	client := http.Client{Timeout: 3 * time.Second}
 
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Ошибка загрузки .env")
