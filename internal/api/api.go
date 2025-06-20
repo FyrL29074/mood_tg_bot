@@ -65,7 +65,7 @@ func handleResponses() {
 				if err != nil {
 					panic(err)
 				}
-				err = sendMessage(chatId, moodWasSuccesfullyAddedText, nil)
+				err = SendMessage(chatId, moodWasSuccesfullyAddedText, nil)
 			}
 			if err != nil {
 				panic(err)
@@ -80,21 +80,21 @@ func handleResponses() {
 }
 
 func SendEmotionCategories(chatId int) error {
-	return sendMessage(chatId, SuggetCheckEmotionText, emotionCategoryButtons)
+	return SendMessage(chatId, SuggetCheckEmotionText, emotionCategoryButtons)
 }
 
 func sendEmotionsMessage(chatId int, emotion string) error {
 	switch emotion {
 	case "Радость":
-		return sendMessage(chatId, chooseYourEmotion, joyEmotionButtons)
+		return SendMessage(chatId, chooseYourEmotion, joyEmotionButtons)
 	case "Грусть":
-		return sendMessage(chatId, chooseYourEmotion, sadnessEmotionButtons)
+		return SendMessage(chatId, chooseYourEmotion, sadnessEmotionButtons)
 	case "Злость":
-		return sendMessage(chatId, chooseYourEmotion, angerEmotionButtons)
+		return SendMessage(chatId, chooseYourEmotion, angerEmotionButtons)
 	case "Страх":
-		return sendMessage(chatId, chooseYourEmotion, fearEmotionButtons)
+		return SendMessage(chatId, chooseYourEmotion, fearEmotionButtons)
 	case "Спокойствие":
-		return sendMessage(chatId, chooseYourEmotion, calmnessEmotionButtons)
+		return SendMessage(chatId, chooseYourEmotion, calmnessEmotionButtons)
 	}
 
 	return nil
@@ -136,7 +136,7 @@ func GetUpdates(offset string) (updates []update, err error) {
 	return updatesResponse.UserActions, nil
 }
 
-func sendMessage(chatId int, message string, btns [][]inlineKeyboardButton) error {
+func SendMessage(chatId int, message string, btns [][]inlineKeyboardButton) error {
 	sendingMessage := sentMessage{
 		ChatId: chatId,
 		Text:   message,
