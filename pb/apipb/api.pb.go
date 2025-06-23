@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.29.3
-// source: pb/apipb/api.proto
+// source: api.proto
 
 package apipb
 
@@ -21,28 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type SendEmotionCategoriesRequest struct {
+type Empty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ChatId        int64                  `protobuf:"varint,1,opt,name=chat_id,json=chatId,proto3" json:"chat_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SendEmotionCategoriesRequest) Reset() {
-	*x = SendEmotionCategoriesRequest{}
-	mi := &file_pb_apipb_api_proto_msgTypes[0]
+func (x *Empty) Reset() {
+	*x = Empty{}
+	mi := &file_api_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SendEmotionCategoriesRequest) String() string {
+func (x *Empty) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SendEmotionCategoriesRequest) ProtoMessage() {}
+func (*Empty) ProtoMessage() {}
 
-func (x *SendEmotionCategoriesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pb_apipb_api_proto_msgTypes[0]
+func (x *Empty) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -53,16 +52,9 @@ func (x *SendEmotionCategoriesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SendEmotionCategoriesRequest.ProtoReflect.Descriptor instead.
-func (*SendEmotionCategoriesRequest) Descriptor() ([]byte, []int) {
-	return file_pb_apipb_api_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *SendEmotionCategoriesRequest) GetChatId() int64 {
-	if x != nil {
-		return x.ChatId
-	}
-	return 0
+// Deprecated: Use Empty.ProtoReflect.Descriptor instead.
+func (*Empty) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{0}
 }
 
 type SendEmotionCategoriesResponse struct {
@@ -74,7 +66,7 @@ type SendEmotionCategoriesResponse struct {
 
 func (x *SendEmotionCategoriesResponse) Reset() {
 	*x = SendEmotionCategoriesResponse{}
-	mi := &file_pb_apipb_api_proto_msgTypes[1]
+	mi := &file_api_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -86,7 +78,7 @@ func (x *SendEmotionCategoriesResponse) String() string {
 func (*SendEmotionCategoriesResponse) ProtoMessage() {}
 
 func (x *SendEmotionCategoriesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pb_apipb_api_proto_msgTypes[1]
+	mi := &file_api_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -99,7 +91,7 @@ func (x *SendEmotionCategoriesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendEmotionCategoriesResponse.ProtoReflect.Descriptor instead.
 func (*SendEmotionCategoriesResponse) Descriptor() ([]byte, []int) {
-	return file_pb_apipb_api_proto_rawDescGZIP(), []int{1}
+	return file_api_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SendEmotionCategoriesResponse) GetStatus() string {
@@ -109,39 +101,38 @@ func (x *SendEmotionCategoriesResponse) GetStatus() string {
 	return ""
 }
 
-var File_pb_apipb_api_proto protoreflect.FileDescriptor
+var File_api_proto protoreflect.FileDescriptor
 
-const file_pb_apipb_api_proto_rawDesc = "" +
+const file_api_proto_rawDesc = "" +
 	"\n" +
-	"\x12pb/apipb/api.proto\x12\x05apipb\"7\n" +
-	"\x1cSendEmotionCategoriesRequest\x12\x17\n" +
-	"\achat_id\x18\x01 \x01(\x03R\x06chatId\"7\n" +
+	"\tapi.proto\x12\x05apipb\"\a\n" +
+	"\x05Empty\"7\n" +
 	"\x1dSendEmotionCategoriesResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2p\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2Y\n" +
 	"\n" +
-	"ApiService\x12b\n" +
-	"\x15SendEmotionCategories\x12#.apipb.SendEmotionCategoriesRequest\x1a$.apipb.SendEmotionCategoriesResponseB\n" +
+	"ApiService\x12K\n" +
+	"\x15SendEmotionCategories\x12\f.apipb.Empty\x1a$.apipb.SendEmotionCategoriesResponseB\n" +
 	"Z\bpb/apipbb\x06proto3"
 
 var (
-	file_pb_apipb_api_proto_rawDescOnce sync.Once
-	file_pb_apipb_api_proto_rawDescData []byte
+	file_api_proto_rawDescOnce sync.Once
+	file_api_proto_rawDescData []byte
 )
 
-func file_pb_apipb_api_proto_rawDescGZIP() []byte {
-	file_pb_apipb_api_proto_rawDescOnce.Do(func() {
-		file_pb_apipb_api_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pb_apipb_api_proto_rawDesc), len(file_pb_apipb_api_proto_rawDesc)))
+func file_api_proto_rawDescGZIP() []byte {
+	file_api_proto_rawDescOnce.Do(func() {
+		file_api_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_proto_rawDesc), len(file_api_proto_rawDesc)))
 	})
-	return file_pb_apipb_api_proto_rawDescData
+	return file_api_proto_rawDescData
 }
 
-var file_pb_apipb_api_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_pb_apipb_api_proto_goTypes = []any{
-	(*SendEmotionCategoriesRequest)(nil),  // 0: apipb.SendEmotionCategoriesRequest
+var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_api_proto_goTypes = []any{
+	(*Empty)(nil),                         // 0: apipb.Empty
 	(*SendEmotionCategoriesResponse)(nil), // 1: apipb.SendEmotionCategoriesResponse
 }
-var file_pb_apipb_api_proto_depIdxs = []int32{
-	0, // 0: apipb.ApiService.SendEmotionCategories:input_type -> apipb.SendEmotionCategoriesRequest
+var file_api_proto_depIdxs = []int32{
+	0, // 0: apipb.ApiService.SendEmotionCategories:input_type -> apipb.Empty
 	1, // 1: apipb.ApiService.SendEmotionCategories:output_type -> apipb.SendEmotionCategoriesResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
@@ -150,26 +141,26 @@ var file_pb_apipb_api_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_pb_apipb_api_proto_init() }
-func file_pb_apipb_api_proto_init() {
-	if File_pb_apipb_api_proto != nil {
+func init() { file_api_proto_init() }
+func file_api_proto_init() {
+	if File_api_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pb_apipb_api_proto_rawDesc), len(file_pb_apipb_api_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_proto_rawDesc), len(file_api_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_pb_apipb_api_proto_goTypes,
-		DependencyIndexes: file_pb_apipb_api_proto_depIdxs,
-		MessageInfos:      file_pb_apipb_api_proto_msgTypes,
+		GoTypes:           file_api_proto_goTypes,
+		DependencyIndexes: file_api_proto_depIdxs,
+		MessageInfos:      file_api_proto_msgTypes,
 	}.Build()
-	File_pb_apipb_api_proto = out.File
-	file_pb_apipb_api_proto_goTypes = nil
-	file_pb_apipb_api_proto_depIdxs = nil
+	File_api_proto = out.File
+	file_api_proto_goTypes = nil
+	file_api_proto_depIdxs = nil
 }

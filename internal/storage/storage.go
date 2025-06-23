@@ -8,11 +8,7 @@ import (
 
 var db *sql.DB
 
-func AddMoodToDb(chat_id int, mood string) error {
-	if err := InitDb(); err != nil {
-		return err
-	}
-
+func addMoodToDb(chat_id int, mood string) error {
 	query := `
 		INSERT INTO mood(mood, chat_id)
 		values(?, ?)	
@@ -23,6 +19,33 @@ func AddMoodToDb(chat_id int, mood string) error {
 	}
 
 	return nil
+}
+
+func GetAllUsersFromDB() ([]int64, error) {
+	query := `
+		SELECT DISTINCT(chat_id) FROM mood
+	`
+
+	r, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+
+	var chatIDs []int64
+	for r.Next() {
+		var chatID int64
+		if err := r.Scan(&chatID); err != nil {
+			return nil, err
+		}
+		chatIDs = append(chatIDs, chatID)
+	}
+
+	if err := r.Err(); err != nil {
+		return nil, err
+	}
+
+	return chatIDs, nil
 }
 
 func InitDb() error {

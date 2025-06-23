@@ -10,19 +10,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-type server struct {
-	apipb.UnimplementedApiServiceServer
-}
-
-func (s *server) SendEmotionCategories(ctx context.Context, req *apipb.SendEmotionCategoriesRequest) (*apipb.SendEmotionCategoriesResponse, error) {
-	err := api.SendPhoto(int(req.ChatId), api.SuggetCheckEmotionText)
-	if err != nil {
-		return nil, err
-	}
-
-	return &apipb.SendEmotionCategoriesResponse{Status: "Ok"}, nil
-}
-
 func main() {
 	fmt.Println("Starting api service...")
 	go api.StartBot()
@@ -39,4 +26,24 @@ func main() {
 	if err := s.Serve(listen); err != nil {
 		panic(err)
 	}
+}
+
+type server struct {
+	apipb.UnimplementedApiServiceServer
+}
+
+func (s *server) SendEmotionCategories(ctx context.Context, req *apipb.Empty) (*apipb.SendEmotionCategoriesResponse, error) {
+	chatIDs, err := api.GetAllChatIDsFromGRPC()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, chatID := range chatIDs {
+		err := api.SendEmotionCategories(int(chatID))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &apipb.SendEmotionCategoriesResponse{Status: "Ok"}, nil
 }

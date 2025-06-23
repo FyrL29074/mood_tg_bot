@@ -44,7 +44,7 @@ func StartKafkaConsumer() {
 			continue
 		}
 
-		err = AddMoodToDb(moodMsg.ChatId, moodMsg.Mood)
+		err = addMoodToDb(moodMsg.ChatId, moodMsg.Mood)
 		if err != nil {
 			log.Printf("Ошибка записи в БД: %v", err)
 		} else {

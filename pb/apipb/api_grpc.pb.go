@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: pb/apipb/api.proto
+// source: api.proto
 
 package apipb
 
@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiServiceClient interface {
-	SendEmotionCategories(ctx context.Context, in *SendEmotionCategoriesRequest, opts ...grpc.CallOption) (*SendEmotionCategoriesResponse, error)
+	SendEmotionCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SendEmotionCategoriesResponse, error)
 }
 
 type apiServiceClient struct {
@@ -37,7 +37,7 @@ func NewApiServiceClient(cc grpc.ClientConnInterface) ApiServiceClient {
 	return &apiServiceClient{cc}
 }
 
-func (c *apiServiceClient) SendEmotionCategories(ctx context.Context, in *SendEmotionCategoriesRequest, opts ...grpc.CallOption) (*SendEmotionCategoriesResponse, error) {
+func (c *apiServiceClient) SendEmotionCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SendEmotionCategoriesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SendEmotionCategoriesResponse)
 	err := c.cc.Invoke(ctx, ApiService_SendEmotionCategories_FullMethodName, in, out, cOpts...)
@@ -51,7 +51,7 @@ func (c *apiServiceClient) SendEmotionCategories(ctx context.Context, in *SendEm
 // All implementations must embed UnimplementedApiServiceServer
 // for forward compatibility.
 type ApiServiceServer interface {
-	SendEmotionCategories(context.Context, *SendEmotionCategoriesRequest) (*SendEmotionCategoriesResponse, error)
+	SendEmotionCategories(context.Context, *Empty) (*SendEmotionCategoriesResponse, error)
 	mustEmbedUnimplementedApiServiceServer()
 }
 
@@ -62,7 +62,7 @@ type ApiServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedApiServiceServer struct{}
 
-func (UnimplementedApiServiceServer) SendEmotionCategories(context.Context, *SendEmotionCategoriesRequest) (*SendEmotionCategoriesResponse, error) {
+func (UnimplementedApiServiceServer) SendEmotionCategories(context.Context, *Empty) (*SendEmotionCategoriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendEmotionCategories not implemented")
 }
 func (UnimplementedApiServiceServer) mustEmbedUnimplementedApiServiceServer() {}
@@ -87,7 +87,7 @@ func RegisterApiServiceServer(s grpc.ServiceRegistrar, srv ApiServiceServer) {
 }
 
 func _ApiService_SendEmotionCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendEmotionCategoriesRequest)
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func _ApiService_SendEmotionCategories_Handler(srv interface{}, ctx context.Cont
 		FullMethod: ApiService_SendEmotionCategories_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).SendEmotionCategories(ctx, req.(*SendEmotionCategoriesRequest))
+		return srv.(ApiServiceServer).SendEmotionCategories(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -117,5 +117,5 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pb/apipb/api.proto",
+	Metadata: "api.proto",
 }

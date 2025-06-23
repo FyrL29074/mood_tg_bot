@@ -5,12 +5,10 @@ option go_package = "pb/apipb";
 package apipb;
 
 service ApiService {
-    rpc SendEmotionCategories(SendEmotionCategoriesRequest) returns (SendEmotionCategoriesResponse);
+    rpc SendEmotionCategories(Empty) returns (SendEmotionCategoriesResponse);
 }
 
-message SendEmotionCategoriesRequest {
-    int64 chat_id = 1;
-}
+message Empty {}
 
 message SendEmotionCategoriesResponse {
     string status = 1;

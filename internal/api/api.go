@@ -2,30 +2,34 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
+	"mood_tg_bot/pb/storagepb"
 	"net/http"
 	"net/url"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func StartBot() {
-	SendPhoto(888558026, SuggetCheckEmotionText)
-
 	InitKafkaWriter()
 	initApi()
+
+	SendPhoto(888558026, "Бот запущен!")
 	handleResponses()
 }
 
 var client *http.Client
 
 func initApi() {
-	client = &http.Client{Timeout: 10 * time.Second}
+	client = &http.Client{Timeout: 300 * time.Second}
 }
 
 func handleResponses() {
@@ -57,7 +61,7 @@ func handleResponses() {
 
 			switch {
 			case isMessage || isBackSymbol || (!isCategory && !isEmotion):
-				err = SendPhoto(chatId, SuggetCheckEmotionText)
+				err = SendEmotionCategories(chatId)
 			case isCategory:
 				err = sendEmotionsMessage(chatId, callbackData)
 			case isEmotion:
@@ -80,7 +84,7 @@ func handleResponses() {
 }
 
 func SendEmotionCategories(chatId int) error {
-	return SendMessage(chatId, SuggetCheckEmotionText, emotionCategoryButtons)
+	return SendPhoto(chatId, SuggetCheckEmotionText)
 }
 
 func sendEmotionsMessage(chatId int, emotion string) error {
@@ -213,4 +217,16 @@ func SendPhoto(chatId int, caption string) error {
 	}
 
 	return nil
+}
+
+func GetAllChatIDsFromGRPC() ([]int64, error) {
+	conn, err := grpc.NewClient("storage:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := storagepb.NewStorageServiceClient(conn)
+	res, err := client.GetChatIDs(context.Background(), &storagepb.Empty{})
+	return res.ChatIDs, err
 }

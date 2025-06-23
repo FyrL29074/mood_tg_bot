@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "pb/storagepb";
+
+package storagepb;
+
+service StorageService {
+    rpc GetChatIDs(Empty) returns (SendChatIDsResponse);
+}
+
+message Empty {}
+
+message SendChatIDsResponse {
+    string status = 1;
+    repeated int64 chatIDs = 2;
+}

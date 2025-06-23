@@ -17,12 +17,11 @@ func SendCategoriesIn12And18() {
 
 		time.Sleep(duration)
 
-		sendEmotionCategoriesGRPC(1033135181)
-		sendEmotionCategoriesGRPC(888558026)
+		sendEmotionCategories()
 	}
 }
 
-func sendEmotionCategoriesGRPC(chatId int) error {
+func sendEmotionCategories() error {
 	conn, err := grpc.NewClient("api:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return err
@@ -30,9 +29,7 @@ func sendEmotionCategoriesGRPC(chatId int) error {
 	defer conn.Close()
 
 	client := apipb.NewApiServiceClient(conn)
-	_, err = client.SendEmotionCategories(context.Background(), &apipb.SendEmotionCategoriesRequest{
-		ChatId: int64(chatId),
-	})
+	_, err = client.SendEmotionCategories(context.Background(), &apipb.Empty{})
 	return err
 }
 
