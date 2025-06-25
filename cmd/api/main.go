@@ -24,7 +24,6 @@ func main() {
 
 	fmt.Println("gRPC сервер api запущен на порту 50052...")
 	if err := s.Serve(listen); err != nil {
-		api.SendMessage(888558026, "Бекенд упал :(", nil)
 		panic(err)
 	}
 }

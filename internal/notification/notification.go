@@ -10,8 +10,6 @@ import (
 )
 
 func SendCategoriesIn12And18() {
-	sendEmotionCategories()
-
 	for {
 		now := time.Now()
 		next := nextTriggerTime(now)

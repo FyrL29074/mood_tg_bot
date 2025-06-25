@@ -19,6 +19,8 @@ import (
 )
 
 func StartBot() {
+	testNewFeatures()
+
 	InitKafkaWriter()
 	initApi()
 
@@ -27,6 +29,15 @@ func StartBot() {
 }
 
 var client *http.Client
+
+func testNewFeatures() {
+	IDs, err := GetAllChatIDsFromGRPC()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(IDs)
+}
 
 func initApi() {
 	client = &http.Client{Timeout: 300 * time.Second}
