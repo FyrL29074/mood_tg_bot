@@ -37,14 +37,18 @@ func nextTriggerTime(now time.Time) time.Time {
 	year, month, day := now.Date()
 	location := now.Location()
 
-	twelve := time.Date(year, month, day, 12, 0, 0, 0, location)
-	eighteen := time.Date(year, month, day, 18, 0, 0, 0, location)
+	ten := time.Date(year, month, day, 10, 0, 0, 0, location)
+	fifteen := time.Date(year, month, day, 15, 0, 0, 0, location)
+	twenty := time.Date(year, month, day, 20, 0, 0, 0, location)
 
-	if now.Before(twelve) {
-		return twelve
+	if now.Before(ten) {
+		return ten
 	}
-	if now.Before(eighteen) {
-		return eighteen
+	if now.Before(fifteen) {
+		return fifteen
+	}
+	if now.Before(twenty) {
+		return twenty
 	}
 
 	return time.Date(year, month, day+1, 12, 0, 0, 0, location)
