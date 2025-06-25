@@ -60,6 +60,8 @@ func handleResponses() {
 			isBackSymbol := callbackData == backSymbol
 
 			switch {
+			case isMessage && upd.MsgInfo.Text == "/start":
+				err = AddUser(upd.MsgInfo.Chat.Id)
 			case isMessage || isBackSymbol || (!isCategory && !isEmotion):
 				err = SendEmotionCategories(chatId)
 			case isCategory:

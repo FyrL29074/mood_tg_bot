@@ -32,8 +32,12 @@ func main() {
 		log.Fatalf("ошибка создания мигратора: %v", err)
 	}
 
-	// m.Force(1)
-	err = m.Up()
+	// m.Force(3)
+
+	// err = m.Up()
+	// err = m.Down()
+	err = m.Steps(1)
+
 	if err != nil && err != migrate.ErrNoChange {
 		log.Fatalf("ошибка применения миграций: %v", err)
 	}

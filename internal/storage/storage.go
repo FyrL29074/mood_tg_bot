@@ -21,9 +21,22 @@ func addMoodToDb(chat_id int, mood string, category string) error {
 	return nil
 }
 
+func addUser(id int) error {
+	query := `
+		INSERT OR IGNORE INTO user(id) 
+		VALUES(?)
+	`
+	_, err := db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetAllUsersFromDB() ([]int64, error) {
 	query := `
-		SELECT DISTINCT(chat_id) FROM mood
+		SELECT chat_id FROM user
 	`
 
 	r, err := db.Query(query)

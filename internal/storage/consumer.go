@@ -37,11 +37,17 @@ func StartKafkaConsumer() {
 			continue
 		}
 
-		var moodMsg MoodMessage
+		var moodMsg Message
 		err = json.Unmarshal(m.Value, &moodMsg)
 		if err != nil {
 			log.Printf("Kafka error: %v", err)
 			continue
+		}
+
+		if moodMsg.Text == "/start" {
+			addUser(moodMsg.ChatId)
+			log.Printf("Пользователь добавлен: %d", moodMsg.ChatId)
+			return
 		}
 
 		err = addMoodToDb(moodMsg.ChatId, moodMsg.Mood, moodMsg.Category)
@@ -53,8 +59,9 @@ func StartKafkaConsumer() {
 	}
 }
 
-type MoodMessage struct {
+type Message struct {
 	ChatId   int    `json:"chat_id"`
-	Mood     string `json:"mood"`
-	Category string `json:"category"`
+	Text     string `json:"text,omitempty"`
+	Mood     string `json:"mood,omitempty"`
+	Category string `json:"category,omitempty"`
 }
