@@ -36,7 +36,7 @@ func addUser(id int) error {
 
 func GetAllUsersFromDB() ([]int64, error) {
 	query := `
-		SELECT chat_id FROM user
+		SELECT id FROM user
 	`
 
 	r, err := db.Query(query)

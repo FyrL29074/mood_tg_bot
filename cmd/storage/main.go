@@ -33,7 +33,7 @@ type server struct {
 	storagepb.UnimplementedStorageServiceServer
 }
 
-func (s *server) SendChatIDs(ctx context.Context, req *storagepb.Empty) (res *storagepb.SendChatIDsResponse, err error) {
+func (s *server) GetChatIDs(ctx context.Context, req *storagepb.Empty) (res *storagepb.SendChatIDsResponse, err error) {
 	chatIDs, err := storage.GetAllUsersFromDB()
 	if err != nil {
 		return nil, err
