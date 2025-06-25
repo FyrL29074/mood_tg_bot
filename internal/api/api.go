@@ -55,7 +55,7 @@ func handleResponses() {
 			}
 
 			_, isCategory := emotionCategories[callbackData]
-			_, isEmotion := emotions[callbackData]
+			_, isEmotion := emotionsCategoriesMap[callbackData]
 			isMessage := upd.MsgInfo != nil
 			isBackSymbol := callbackData == backSymbol
 
@@ -65,7 +65,8 @@ func handleResponses() {
 			case isCategory:
 				err = sendEmotionsMessage(chatId, callbackData)
 			case isEmotion:
-				err = SendMoodToKafka(chatId, callbackData)
+				category := emotionsCategoriesMap[callbackData]
+				err = SendMoodToKafka(chatId, callbackData, category)
 				if err != nil {
 					panic(err)
 				}

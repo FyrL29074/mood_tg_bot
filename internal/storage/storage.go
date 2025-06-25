@@ -8,12 +8,12 @@ import (
 
 var db *sql.DB
 
-func addMoodToDb(chat_id int, mood string) error {
+func addMoodToDb(chat_id int, mood string, category string) error {
 	query := `
-		INSERT INTO mood(mood, chat_id)
-		values(?, ?)	
+		INSERT INTO mood(mood, chat_id, category)
+		values(?, ?, ?)	
 `
-	_, err := db.Exec(query, mood, chat_id)
+	_, err := db.Exec(query, mood, chat_id, category)
 	if err != nil {
 		return err
 	}
@@ -60,20 +60,6 @@ func InitDb() error {
 	}
 
 	if err = db.Ping(); err != nil {
-		return err
-	}
-
-	query := `
-		CREATE TABLE IF NOT EXISTS mood (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-			mood TEXT,
-			chat_id INTEGER
-		);
-	`
-
-	_, err = db.Exec(query)
-	if err != nil {
 		return err
 	}
 

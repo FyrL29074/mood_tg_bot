@@ -33,8 +33,8 @@ func InitKafkaWriter() {
 	}
 }
 
-func SendMoodToKafka(chatId int, mood string) error {
-	msgStruct := MoodMessage{ChatId: chatId, Mood: mood}
+func SendMoodToKafka(chatId int, mood string, category string) error {
+	msgStruct := MoodMessage{ChatId: chatId, Mood: mood, Category: category}
 	value, err := json.Marshal(msgStruct)
 	if err != nil {
 		return err
@@ -53,6 +53,7 @@ func SendMoodToKafka(chatId int, mood string) error {
 }
 
 type MoodMessage struct {
-	ChatId int    `json:"chat_id"`
-	Mood   string `json:"mood"`
+	ChatId   int    `json:"chat_id"`
+	Mood     string `json:"mood"`
+	Category string `json"category"`
 }

@@ -44,7 +44,7 @@ func StartKafkaConsumer() {
 			continue
 		}
 
-		err = addMoodToDb(moodMsg.ChatId, moodMsg.Mood)
+		err = addMoodToDb(moodMsg.ChatId, moodMsg.Mood, moodMsg.Category)
 		if err != nil {
 			log.Printf("Ошибка записи в БД: %v", err)
 		} else {
@@ -54,6 +54,7 @@ func StartKafkaConsumer() {
 }
 
 type MoodMessage struct {
-	ChatId int    `json:"chat_id"`
-	Mood   string `json:"mood"`
+	ChatId   int    `json:"chat_id"`
+	Mood     string `json:"mood"`
+	Category string `json:"category"`
 }
