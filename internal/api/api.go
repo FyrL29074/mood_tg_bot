@@ -231,5 +231,8 @@ func GetAllChatIDsFromGRPC() ([]int64, error) {
 
 	client := storagepb.NewStorageServiceClient(conn)
 	res, err := client.GetChatIDs(context.Background(), &storagepb.Empty{})
-	return res.ChatIDs, err
+	if err != nil {
+		return nil, err
+	}
+	return res.ChatIDs, nil
 }
