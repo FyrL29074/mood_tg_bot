@@ -11,6 +11,10 @@ import (
 )
 
 func main() {
+	defer func() {
+		api.SendMessage(888558026, "Backend пал...", nil)
+	}()
+
 	fmt.Println("Starting api service...")
 	go api.StartBot()
 
