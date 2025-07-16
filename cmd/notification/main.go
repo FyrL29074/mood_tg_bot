@@ -7,5 +7,6 @@ import (
 
 func main() {
 	fmt.Println("Starting notification service...")
-	notification.SendCategoriesIn12And18()
+	go notification.SendCategoriesIn12And18()
+	notification.SendStatisticsOnMonday()
 }

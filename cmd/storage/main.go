@@ -41,3 +41,12 @@ func (s *server) GetChatIDs(ctx context.Context, req *storagepb.Empty) (res *sto
 
 	return &storagepb.SendChatIDsResponse{Status: "OK", ChatIDs: chatIDs}, nil
 }
+
+func (s *server) GetStatistics(ctx context.Context, req *storagepb.GetStatisticsRequest) (*storagepb.Statistics, error) {
+	stat, err := storage.GetStatistics(int(req.ChatId))
+	if err != nil {
+		return nil, err
+	}
+
+	return &storagepb.Statistics{Status: "OK", Stat: stat}, nil
+}

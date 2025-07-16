@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: api.proto
+// source: pb/apipb/api.proto
 
 package apipb
 
@@ -20,13 +20,15 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	ApiService_SendEmotionCategories_FullMethodName = "/apipb.ApiService/SendEmotionCategories"
+	ApiService_SendStatistics_FullMethodName        = "/apipb.ApiService/SendStatistics"
 )
 
 // ApiServiceClient is the client API for ApiService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiServiceClient interface {
-	SendEmotionCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SendEmotionCategoriesResponse, error)
+	SendEmotionCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
+	SendStatistics(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 }
 
 type apiServiceClient struct {
@@ -37,10 +39,20 @@ func NewApiServiceClient(cc grpc.ClientConnInterface) ApiServiceClient {
 	return &apiServiceClient{cc}
 }
 
-func (c *apiServiceClient) SendEmotionCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SendEmotionCategoriesResponse, error) {
+func (c *apiServiceClient) SendEmotionCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SendEmotionCategoriesResponse)
+	out := new(Response)
 	err := c.cc.Invoke(ctx, ApiService_SendEmotionCategories_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiServiceClient) SendStatistics(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Response)
+	err := c.cc.Invoke(ctx, ApiService_SendStatistics_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +63,8 @@ func (c *apiServiceClient) SendEmotionCategories(ctx context.Context, in *Empty,
 // All implementations must embed UnimplementedApiServiceServer
 // for forward compatibility.
 type ApiServiceServer interface {
-	SendEmotionCategories(context.Context, *Empty) (*SendEmotionCategoriesResponse, error)
+	SendEmotionCategories(context.Context, *Empty) (*Response, error)
+	SendStatistics(context.Context, *Empty) (*Response, error)
 	mustEmbedUnimplementedApiServiceServer()
 }
 
@@ -62,8 +75,11 @@ type ApiServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedApiServiceServer struct{}
 
-func (UnimplementedApiServiceServer) SendEmotionCategories(context.Context, *Empty) (*SendEmotionCategoriesResponse, error) {
+func (UnimplementedApiServiceServer) SendEmotionCategories(context.Context, *Empty) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendEmotionCategories not implemented")
+}
+func (UnimplementedApiServiceServer) SendStatistics(context.Context, *Empty) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendStatistics not implemented")
 }
 func (UnimplementedApiServiceServer) mustEmbedUnimplementedApiServiceServer() {}
 func (UnimplementedApiServiceServer) testEmbeddedByValue()                    {}
@@ -104,6 +120,24 @@ func _ApiService_SendEmotionCategories_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApiService_SendStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).SendStatistics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_SendStatistics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).SendStatistics(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ApiService_ServiceDesc is the grpc.ServiceDesc for ApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -115,7 +149,11 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SendEmotionCategories",
 			Handler:    _ApiService_SendEmotionCategories_Handler,
 		},
+		{
+			MethodName: "SendStatistics",
+			Handler:    _ApiService_SendStatistics_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api.proto",
+	Metadata: "pb/apipb/api.proto",
 }

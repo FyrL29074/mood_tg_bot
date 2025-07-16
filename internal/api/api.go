@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -19,11 +20,10 @@ import (
 )
 
 func StartBot() {
-	testNewFeatures()
-
 	InitKafkaWriter()
 	initApi()
 
+	testNewFeatures()
 	SendPhoto(888558026, "Бот запущен!")
 	handleResponses()
 }
@@ -31,12 +31,24 @@ func StartBot() {
 var client *http.Client
 
 func testNewFeatures() {
-	IDs, err := GetAllChatIDsFromGRPC()
+	stat, err := GetStatistics(888558026)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(IDs)
+	formatStatistics := func(stat map[string]int32) string {
+		var str strings.Builder
+		str.WriteString("Ваша статистика за неделю:\n\n")
+
+		for category, count := range stat {
+			str.WriteString(fmt.Sprintf("%s - %d\n", category, count))
+		}
+
+		return str.String()
+	}
+
+	fmt.Println(stat)
+	SendMessage(888558026, formatStatistics(stat), nil)
 }
 
 func initApi() {
@@ -250,4 +262,20 @@ func GetAllChatIDsFromGRPC() ([]int64, error) {
 		return nil, err
 	}
 	return res.ChatIDs, nil
+}
+
+func GetStatistics(chatId int) (map[string]int32, error) {
+	conn, err := grpc.NewClient("storage:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := storagepb.NewStorageServiceClient(conn)
+	res, err := client.GetStatistics(context.Background(), &storagepb.GetStatisticsRequest{ChatId: int64(chatId)})
+	if err != nil {
+		return nil, err
+	}
+
+	return res.Stat, nil
 }

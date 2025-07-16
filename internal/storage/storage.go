@@ -12,7 +12,7 @@ func addMoodToDb(chat_id int, mood string, category string) error {
 	query := `
 		INSERT INTO mood(mood, chat_id, category)
 		values(?, ?, ?)	
-`
+	`
 	_, err := db.Exec(query, mood, chat_id, category)
 	if err != nil {
 		return err
@@ -59,6 +59,42 @@ func GetAllUsersFromDB() ([]int64, error) {
 	}
 
 	return chatIDs, nil
+}
+
+func GetStatistics(chatId int) (map[string]int32, error) {
+	query := `
+		SELECT category, count(id)
+        FROM mood 
+        WHERE chat_id = ? 
+		AND timestamp >= date('now', 'weekday 1', '-7 days')
+		AND timestamp < date('now', 'weekday 1')
+        GROUP BY category;
+	`
+
+	r, err := db.Query(query, chatId)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+
+	stat := make(map[string]int32)
+	for r.Next() {
+		var category string
+		var count int32
+
+		err = r.Scan(&category, &count)
+		if err != nil {
+			return nil, err
+		}
+
+		stat[category] = count
+	}
+
+	if err = r.Err(); err != nil {
+		return nil, err
+	}
+
+	return stat, nil
 }
 
 func InitDb() error {

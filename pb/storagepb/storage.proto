@@ -6,6 +6,7 @@ package storagepb;
 
 service StorageService {
     rpc GetChatIDs(Empty) returns (SendChatIDsResponse);
+    rpc GetStatistics(GetStatisticsRequest) returns (Statistics);
 }
 
 message Empty {}
@@ -13,4 +14,13 @@ message Empty {}
 message SendChatIDsResponse {
     string status = 1;
     repeated int64 chatIDs = 2;
+}
+
+message GetStatisticsRequest {
+    int64 chatId = 1;
+}
+
+message Statistics {
+    string status = 1;
+    map<string, int32> stat = 2;
 }

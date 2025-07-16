@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StorageService_GetChatIDs_FullMethodName = "/storagepb.StorageService/GetChatIDs"
+	StorageService_GetChatIDs_FullMethodName    = "/storagepb.StorageService/GetChatIDs"
+	StorageService_GetStatistics_FullMethodName = "/storagepb.StorageService/GetStatistics"
 )
 
 // StorageServiceClient is the client API for StorageService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageServiceClient interface {
 	GetChatIDs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SendChatIDsResponse, error)
+	GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*Statistics, error)
 }
 
 type storageServiceClient struct {
@@ -47,11 +49,22 @@ func (c *storageServiceClient) GetChatIDs(ctx context.Context, in *Empty, opts .
 	return out, nil
 }
 
+func (c *storageServiceClient) GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*Statistics, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Statistics)
+	err := c.cc.Invoke(ctx, StorageService_GetStatistics_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StorageServiceServer is the server API for StorageService service.
 // All implementations must embed UnimplementedStorageServiceServer
 // for forward compatibility.
 type StorageServiceServer interface {
 	GetChatIDs(context.Context, *Empty) (*SendChatIDsResponse, error)
+	GetStatistics(context.Context, *GetStatisticsRequest) (*Statistics, error)
 	mustEmbedUnimplementedStorageServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedStorageServiceServer struct{}
 
 func (UnimplementedStorageServiceServer) GetChatIDs(context.Context, *Empty) (*SendChatIDsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChatIDs not implemented")
+}
+func (UnimplementedStorageServiceServer) GetStatistics(context.Context, *GetStatisticsRequest) (*Statistics, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStatistics not implemented")
 }
 func (UnimplementedStorageServiceServer) mustEmbedUnimplementedStorageServiceServer() {}
 func (UnimplementedStorageServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +120,24 @@ func _StorageService_GetChatIDs_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StorageService_GetStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStatisticsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).GetStatistics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_GetStatistics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).GetStatistics(ctx, req.(*GetStatisticsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StorageService_ServiceDesc is the grpc.ServiceDesc for StorageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetChatIDs",
 			Handler:    _StorageService_GetChatIDs_Handler,
+		},
+		{
+			MethodName: "GetStatistics",
+			Handler:    _StorageService_GetStatistics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

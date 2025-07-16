@@ -109,6 +109,102 @@ func (x *SendChatIDsResponse) GetChatIDs() []int64 {
 	return nil
 }
 
+type GetStatisticsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChatId        int64                  `protobuf:"varint,1,opt,name=chatId,proto3" json:"chatId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetStatisticsRequest) Reset() {
+	*x = GetStatisticsRequest{}
+	mi := &file_storage_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetStatisticsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStatisticsRequest) ProtoMessage() {}
+
+func (x *GetStatisticsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStatisticsRequest.ProtoReflect.Descriptor instead.
+func (*GetStatisticsRequest) Descriptor() ([]byte, []int) {
+	return file_storage_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetStatisticsRequest) GetChatId() int64 {
+	if x != nil {
+		return x.ChatId
+	}
+	return 0
+}
+
+type Statistics struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Stat          map[string]int32       `protobuf:"bytes,2,rep,name=stat,proto3" json:"stat,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Statistics) Reset() {
+	*x = Statistics{}
+	mi := &file_storage_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Statistics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Statistics) ProtoMessage() {}
+
+func (x *Statistics) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Statistics.ProtoReflect.Descriptor instead.
+func (*Statistics) Descriptor() ([]byte, []int) {
+	return file_storage_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Statistics) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *Statistics) GetStat() map[string]int32 {
+	if x != nil {
+		return x.Stat
+	}
+	return nil
+}
+
 var File_storage_proto protoreflect.FileDescriptor
 
 const file_storage_proto_rawDesc = "" +
@@ -117,10 +213,20 @@ const file_storage_proto_rawDesc = "" +
 	"\x05Empty\"G\n" +
 	"\x13SendChatIDsResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x18\n" +
-	"\achatIDs\x18\x02 \x03(\x03R\achatIDs2P\n" +
+	"\achatIDs\x18\x02 \x03(\x03R\achatIDs\".\n" +
+	"\x14GetStatisticsRequest\x12\x16\n" +
+	"\x06chatId\x18\x01 \x01(\x03R\x06chatId\"\x92\x01\n" +
+	"\n" +
+	"Statistics\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\x123\n" +
+	"\x04stat\x18\x02 \x03(\v2\x1f.storagepb.Statistics.StatEntryR\x04stat\x1a7\n" +
+	"\tStatEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x012\x99\x01\n" +
 	"\x0eStorageService\x12>\n" +
 	"\n" +
-	"GetChatIDs\x12\x10.storagepb.Empty\x1a\x1e.storagepb.SendChatIDsResponseB\x0eZ\fpb/storagepbb\x06proto3"
+	"GetChatIDs\x12\x10.storagepb.Empty\x1a\x1e.storagepb.SendChatIDsResponse\x12G\n" +
+	"\rGetStatistics\x12\x1f.storagepb.GetStatisticsRequest\x1a\x15.storagepb.StatisticsB\x0eZ\fpb/storagepbb\x06proto3"
 
 var (
 	file_storage_proto_rawDescOnce sync.Once
@@ -134,19 +240,25 @@ func file_storage_proto_rawDescGZIP() []byte {
 	return file_storage_proto_rawDescData
 }
 
-var file_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_storage_proto_goTypes = []any{
-	(*Empty)(nil),               // 0: storagepb.Empty
-	(*SendChatIDsResponse)(nil), // 1: storagepb.SendChatIDsResponse
+	(*Empty)(nil),                // 0: storagepb.Empty
+	(*SendChatIDsResponse)(nil),  // 1: storagepb.SendChatIDsResponse
+	(*GetStatisticsRequest)(nil), // 2: storagepb.GetStatisticsRequest
+	(*Statistics)(nil),           // 3: storagepb.Statistics
+	nil,                          // 4: storagepb.Statistics.StatEntry
 }
 var file_storage_proto_depIdxs = []int32{
-	0, // 0: storagepb.StorageService.GetChatIDs:input_type -> storagepb.Empty
-	1, // 1: storagepb.StorageService.GetChatIDs:output_type -> storagepb.SendChatIDsResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: storagepb.Statistics.stat:type_name -> storagepb.Statistics.StatEntry
+	0, // 1: storagepb.StorageService.GetChatIDs:input_type -> storagepb.Empty
+	2, // 2: storagepb.StorageService.GetStatistics:input_type -> storagepb.GetStatisticsRequest
+	1, // 3: storagepb.StorageService.GetChatIDs:output_type -> storagepb.SendChatIDsResponse
+	3, // 4: storagepb.StorageService.GetStatistics:output_type -> storagepb.Statistics
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_storage_proto_init() }
@@ -160,7 +272,7 @@ func file_storage_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_proto_rawDesc), len(file_storage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
