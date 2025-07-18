@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: storage.proto
+// source: pb/storagepb/storage.proto
 
 package storagepb
 
@@ -28,7 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageServiceClient interface {
 	GetChatIDs(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SendChatIDsResponse, error)
-	GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*Statistics, error)
+	GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*StatisticsResponse, error)
 }
 
 type storageServiceClient struct {
@@ -49,9 +49,9 @@ func (c *storageServiceClient) GetChatIDs(ctx context.Context, in *Empty, opts .
 	return out, nil
 }
 
-func (c *storageServiceClient) GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*Statistics, error) {
+func (c *storageServiceClient) GetStatistics(ctx context.Context, in *GetStatisticsRequest, opts ...grpc.CallOption) (*StatisticsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Statistics)
+	out := new(StatisticsResponse)
 	err := c.cc.Invoke(ctx, StorageService_GetStatistics_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (c *storageServiceClient) GetStatistics(ctx context.Context, in *GetStatist
 // for forward compatibility.
 type StorageServiceServer interface {
 	GetChatIDs(context.Context, *Empty) (*SendChatIDsResponse, error)
-	GetStatistics(context.Context, *GetStatisticsRequest) (*Statistics, error)
+	GetStatistics(context.Context, *GetStatisticsRequest) (*StatisticsResponse, error)
 	mustEmbedUnimplementedStorageServiceServer()
 }
 
@@ -78,7 +78,7 @@ type UnimplementedStorageServiceServer struct{}
 func (UnimplementedStorageServiceServer) GetChatIDs(context.Context, *Empty) (*SendChatIDsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChatIDs not implemented")
 }
-func (UnimplementedStorageServiceServer) GetStatistics(context.Context, *GetStatisticsRequest) (*Statistics, error) {
+func (UnimplementedStorageServiceServer) GetStatistics(context.Context, *GetStatisticsRequest) (*StatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStatistics not implemented")
 }
 func (UnimplementedStorageServiceServer) mustEmbedUnimplementedStorageServiceServer() {}
@@ -155,5 +155,5 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "storage.proto",
+	Metadata: "pb/storagepb/storage.proto",
 }

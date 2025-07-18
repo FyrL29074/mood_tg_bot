@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -61,14 +62,14 @@ func GetAllUsersFromDB() ([]int64, error) {
 	return chatIDs, nil
 }
 
-func GetStatistics(chatId int) (map[string]int32, error) {
+func GetStatistics(chatId int) (*Statistics, error) {
 	query := `
-		SELECT category, count(id)
+		SELECT category, mood, count(id)
         FROM mood 
         WHERE chat_id = ? 
 		AND timestamp >= date('now', 'weekday 1', '-7 days')
 		AND timestamp < date('now', 'weekday 1')
-        GROUP BY category;
+        GROUP BY category, mood;
 	`
 
 	r, err := db.Query(query, chatId)
@@ -77,24 +78,36 @@ func GetStatistics(chatId int) (map[string]int32, error) {
 	}
 	defer r.Close()
 
-	stat := make(map[string]int32)
+	stat := Statistics{make(map[string]Category)}
 	for r.Next() {
-		var category string
-		var count int32
+		var categoryName string
+		var emotion string
+		var count int
 
-		err = r.Scan(&category, &count)
+		err = r.Scan(&categoryName, &emotion, &count)
 		if err != nil {
 			return nil, err
 		}
 
-		stat[category] = count
+		category, exist := stat.Categories[categoryName]
+		fmt.Println(category, exist)
+		if !exist {
+			category = Category{
+				Emotions: make(map[string]int),
+			}
+		}
+		category.Emotions[emotion] = count
+
+		stat.Categories[categoryName] = category
 	}
+
+	fmt.Println(stat)
 
 	if err = r.Err(); err != nil {
 		return nil, err
 	}
 
-	return stat, nil
+	return &stat, nil
 }
 
 func InitDb() error {

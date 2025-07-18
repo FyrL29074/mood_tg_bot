@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.29.3
-// source: storage.proto
+// source: pb/storagepb/storage.proto
 
 package storagepb
 
@@ -29,7 +29,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_storage_proto_msgTypes[0]
+	mi := &file_pb_storagepb_storage_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -41,7 +41,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_proto_msgTypes[0]
+	mi := &file_pb_storagepb_storage_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -54,7 +54,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_storage_proto_rawDescGZIP(), []int{0}
+	return file_pb_storagepb_storage_proto_rawDescGZIP(), []int{0}
 }
 
 type SendChatIDsResponse struct {
@@ -67,7 +67,7 @@ type SendChatIDsResponse struct {
 
 func (x *SendChatIDsResponse) Reset() {
 	*x = SendChatIDsResponse{}
-	mi := &file_storage_proto_msgTypes[1]
+	mi := &file_pb_storagepb_storage_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -79,7 +79,7 @@ func (x *SendChatIDsResponse) String() string {
 func (*SendChatIDsResponse) ProtoMessage() {}
 
 func (x *SendChatIDsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_proto_msgTypes[1]
+	mi := &file_pb_storagepb_storage_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -92,7 +92,7 @@ func (x *SendChatIDsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendChatIDsResponse.ProtoReflect.Descriptor instead.
 func (*SendChatIDsResponse) Descriptor() ([]byte, []int) {
-	return file_storage_proto_rawDescGZIP(), []int{1}
+	return file_pb_storagepb_storage_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SendChatIDsResponse) GetStatus() string {
@@ -118,7 +118,7 @@ type GetStatisticsRequest struct {
 
 func (x *GetStatisticsRequest) Reset() {
 	*x = GetStatisticsRequest{}
-	mi := &file_storage_proto_msgTypes[2]
+	mi := &file_pb_storagepb_storage_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -130,7 +130,7 @@ func (x *GetStatisticsRequest) String() string {
 func (*GetStatisticsRequest) ProtoMessage() {}
 
 func (x *GetStatisticsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_proto_msgTypes[2]
+	mi := &file_pb_storagepb_storage_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -143,7 +143,7 @@ func (x *GetStatisticsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStatisticsRequest.ProtoReflect.Descriptor instead.
 func (*GetStatisticsRequest) Descriptor() ([]byte, []int) {
-	return file_storage_proto_rawDescGZIP(), []int{2}
+	return file_pb_storagepb_storage_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetStatisticsRequest) GetChatId() int64 {
@@ -153,29 +153,29 @@ func (x *GetStatisticsRequest) GetChatId() int64 {
 	return 0
 }
 
-type Statistics struct {
+type Emotion struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	Stat          map[string]int32       `protobuf:"bytes,2,rep,name=stat,proto3" json:"stat,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Count         int32                  `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Statistics) Reset() {
-	*x = Statistics{}
-	mi := &file_storage_proto_msgTypes[3]
+func (x *Emotion) Reset() {
+	*x = Emotion{}
+	mi := &file_pb_storagepb_storage_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Statistics) String() string {
+func (x *Emotion) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Statistics) ProtoMessage() {}
+func (*Emotion) ProtoMessage() {}
 
-func (x *Statistics) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_proto_msgTypes[3]
+func (x *Emotion) ProtoReflect() protoreflect.Message {
+	mi := &file_pb_storagepb_storage_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -186,101 +186,202 @@ func (x *Statistics) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Statistics.ProtoReflect.Descriptor instead.
-func (*Statistics) Descriptor() ([]byte, []int) {
-	return file_storage_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use Emotion.ProtoReflect.Descriptor instead.
+func (*Emotion) Descriptor() ([]byte, []int) {
+	return file_pb_storagepb_storage_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Statistics) GetStatus() string {
+func (x *Emotion) GetName() string {
 	if x != nil {
-		return x.Status
+		return x.Name
 	}
 	return ""
 }
 
-func (x *Statistics) GetStat() map[string]int32 {
+func (x *Emotion) GetCount() int32 {
 	if x != nil {
-		return x.Stat
+		return x.Count
+	}
+	return 0
+}
+
+type Category struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Emotions      []*Emotion             `protobuf:"bytes,2,rep,name=emotions,proto3" json:"emotions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Category) Reset() {
+	*x = Category{}
+	mi := &file_pb_storagepb_storage_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Category) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Category) ProtoMessage() {}
+
+func (x *Category) ProtoReflect() protoreflect.Message {
+	mi := &file_pb_storagepb_storage_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Category.ProtoReflect.Descriptor instead.
+func (*Category) Descriptor() ([]byte, []int) {
+	return file_pb_storagepb_storage_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Category) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Category) GetEmotions() []*Emotion {
+	if x != nil {
+		return x.Emotions
 	}
 	return nil
 }
 
-var File_storage_proto protoreflect.FileDescriptor
+type StatisticsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Categories    []*Category            `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
 
-const file_storage_proto_rawDesc = "" +
+func (x *StatisticsResponse) Reset() {
+	*x = StatisticsResponse{}
+	mi := &file_pb_storagepb_storage_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StatisticsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StatisticsResponse) ProtoMessage() {}
+
+func (x *StatisticsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_pb_storagepb_storage_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StatisticsResponse.ProtoReflect.Descriptor instead.
+func (*StatisticsResponse) Descriptor() ([]byte, []int) {
+	return file_pb_storagepb_storage_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *StatisticsResponse) GetCategories() []*Category {
+	if x != nil {
+		return x.Categories
+	}
+	return nil
+}
+
+var File_pb_storagepb_storage_proto protoreflect.FileDescriptor
+
+const file_pb_storagepb_storage_proto_rawDesc = "" +
 	"\n" +
-	"\rstorage.proto\x12\tstoragepb\"\a\n" +
+	"\x1apb/storagepb/storage.proto\x12\tstoragepb\"\a\n" +
 	"\x05Empty\"G\n" +
 	"\x13SendChatIDsResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x18\n" +
 	"\achatIDs\x18\x02 \x03(\x03R\achatIDs\".\n" +
 	"\x14GetStatisticsRequest\x12\x16\n" +
-	"\x06chatId\x18\x01 \x01(\x03R\x06chatId\"\x92\x01\n" +
+	"\x06chatId\x18\x01 \x01(\x03R\x06chatId\"3\n" +
+	"\aEmotion\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
+	"\x05count\x18\x02 \x01(\x05R\x05count\"N\n" +
+	"\bCategory\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12.\n" +
+	"\bemotions\x18\x02 \x03(\v2\x12.storagepb.EmotionR\bemotions\"I\n" +
+	"\x12StatisticsResponse\x123\n" +
 	"\n" +
-	"Statistics\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\x123\n" +
-	"\x04stat\x18\x02 \x03(\v2\x1f.storagepb.Statistics.StatEntryR\x04stat\x1a7\n" +
-	"\tStatEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x012\x99\x01\n" +
+	"categories\x18\x01 \x03(\v2\x13.storagepb.CategoryR\n" +
+	"categories2\xa1\x01\n" +
 	"\x0eStorageService\x12>\n" +
 	"\n" +
-	"GetChatIDs\x12\x10.storagepb.Empty\x1a\x1e.storagepb.SendChatIDsResponse\x12G\n" +
-	"\rGetStatistics\x12\x1f.storagepb.GetStatisticsRequest\x1a\x15.storagepb.StatisticsB\x0eZ\fpb/storagepbb\x06proto3"
+	"GetChatIDs\x12\x10.storagepb.Empty\x1a\x1e.storagepb.SendChatIDsResponse\x12O\n" +
+	"\rGetStatistics\x12\x1f.storagepb.GetStatisticsRequest\x1a\x1d.storagepb.StatisticsResponseB\x0eZ\fpb/storagepbb\x06proto3"
 
 var (
-	file_storage_proto_rawDescOnce sync.Once
-	file_storage_proto_rawDescData []byte
+	file_pb_storagepb_storage_proto_rawDescOnce sync.Once
+	file_pb_storagepb_storage_proto_rawDescData []byte
 )
 
-func file_storage_proto_rawDescGZIP() []byte {
-	file_storage_proto_rawDescOnce.Do(func() {
-		file_storage_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_storage_proto_rawDesc), len(file_storage_proto_rawDesc)))
+func file_pb_storagepb_storage_proto_rawDescGZIP() []byte {
+	file_pb_storagepb_storage_proto_rawDescOnce.Do(func() {
+		file_pb_storagepb_storage_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pb_storagepb_storage_proto_rawDesc), len(file_pb_storagepb_storage_proto_rawDesc)))
 	})
-	return file_storage_proto_rawDescData
+	return file_pb_storagepb_storage_proto_rawDescData
 }
 
-var file_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_storage_proto_goTypes = []any{
+var file_pb_storagepb_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_pb_storagepb_storage_proto_goTypes = []any{
 	(*Empty)(nil),                // 0: storagepb.Empty
 	(*SendChatIDsResponse)(nil),  // 1: storagepb.SendChatIDsResponse
 	(*GetStatisticsRequest)(nil), // 2: storagepb.GetStatisticsRequest
-	(*Statistics)(nil),           // 3: storagepb.Statistics
-	nil,                          // 4: storagepb.Statistics.StatEntry
+	(*Emotion)(nil),              // 3: storagepb.Emotion
+	(*Category)(nil),             // 4: storagepb.Category
+	(*StatisticsResponse)(nil),   // 5: storagepb.StatisticsResponse
 }
-var file_storage_proto_depIdxs = []int32{
-	4, // 0: storagepb.Statistics.stat:type_name -> storagepb.Statistics.StatEntry
-	0, // 1: storagepb.StorageService.GetChatIDs:input_type -> storagepb.Empty
-	2, // 2: storagepb.StorageService.GetStatistics:input_type -> storagepb.GetStatisticsRequest
-	1, // 3: storagepb.StorageService.GetChatIDs:output_type -> storagepb.SendChatIDsResponse
-	3, // 4: storagepb.StorageService.GetStatistics:output_type -> storagepb.Statistics
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+var file_pb_storagepb_storage_proto_depIdxs = []int32{
+	3, // 0: storagepb.Category.emotions:type_name -> storagepb.Emotion
+	4, // 1: storagepb.StatisticsResponse.categories:type_name -> storagepb.Category
+	0, // 2: storagepb.StorageService.GetChatIDs:input_type -> storagepb.Empty
+	2, // 3: storagepb.StorageService.GetStatistics:input_type -> storagepb.GetStatisticsRequest
+	1, // 4: storagepb.StorageService.GetChatIDs:output_type -> storagepb.SendChatIDsResponse
+	5, // 5: storagepb.StorageService.GetStatistics:output_type -> storagepb.StatisticsResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_storage_proto_init() }
-func file_storage_proto_init() {
-	if File_storage_proto != nil {
+func init() { file_pb_storagepb_storage_proto_init() }
+func file_pb_storagepb_storage_proto_init() {
+	if File_pb_storagepb_storage_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_proto_rawDesc), len(file_storage_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pb_storagepb_storage_proto_rawDesc), len(file_pb_storagepb_storage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_storage_proto_goTypes,
-		DependencyIndexes: file_storage_proto_depIdxs,
-		MessageInfos:      file_storage_proto_msgTypes,
+		GoTypes:           file_pb_storagepb_storage_proto_goTypes,
+		DependencyIndexes: file_pb_storagepb_storage_proto_depIdxs,
+		MessageInfos:      file_pb_storagepb_storage_proto_msgTypes,
 	}.Build()
-	File_storage_proto = out.File
-	file_storage_proto_goTypes = nil
-	file_storage_proto_depIdxs = nil
+	File_pb_storagepb_storage_proto = out.File
+	file_pb_storagepb_storage_proto_goTypes = nil
+	file_pb_storagepb_storage_proto_depIdxs = nil
 }

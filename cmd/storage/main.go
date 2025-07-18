@@ -42,11 +42,28 @@ func (s *server) GetChatIDs(ctx context.Context, req *storagepb.Empty) (res *sto
 	return &storagepb.SendChatIDsResponse{Status: "OK", ChatIDs: chatIDs}, nil
 }
 
-func (s *server) GetStatistics(ctx context.Context, req *storagepb.GetStatisticsRequest) (*storagepb.Statistics, error) {
+func (s *server) GetStatistics(ctx context.Context, req *storagepb.GetStatisticsRequest) (*storagepb.StatisticsResponse, error) {
 	stat, err := storage.GetStatistics(int(req.ChatId))
 	if err != nil {
 		return nil, err
 	}
 
-	return &storagepb.Statistics{Status: "OK", Stat: stat}, nil
+	statPb := statPbMap(*stat)
+
+	return &storagepb.StatisticsResponse{Categories: statPb}, nil
+}
+
+func statPbMap(stat storage.Statistics) []*storagepb.Category {
+	var statPb []*storagepb.Category
+
+	for categoryName, category := range stat.Categories {
+		var emotions []*storagepb.Emotion
+		for emotion, count := range category.Emotions {
+			emotions = append(emotions, &storagepb.Emotion{Name: emotion, Count: int32(count)})
+		}
+
+		statPb = append(statPb, &storagepb.Category{Name: categoryName, Emotions: emotions})
+	}
+
+	return statPb
 }

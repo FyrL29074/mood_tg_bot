@@ -52,7 +52,7 @@ func nextCategoriesTriggerTime(now time.Time) time.Time {
 		return twenty
 	}
 
-	return time.Date(year, month, day+1, 12, 0, 0, 0, location)
+	return time.Date(year, month, day+1, 10, 0, 0, 0, location)
 }
 
 func SendStatisticsOnMonday() {

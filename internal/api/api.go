@@ -36,12 +36,37 @@ func testNewFeatures() {
 		panic(err)
 	}
 
-	formatStatistics := func(stat map[string]int32) string {
+	formatCategory := func(category *storagepb.Category) string {
+		var str strings.Builder
+
+		counter := 0
+		for _, emotion := range category.Emotions {
+			counter += int(emotion.Count)
+		}
+
+		str.WriteString(fmt.Sprintf("%s - %d\n", category.Name, counter))
+
+		return str.String()
+	}
+
+	formatEmotion := func(emotion *storagepb.Emotion) string {
+		var str strings.Builder
+
+		str.WriteString(fmt.Sprintf("	• %s - %d\n", emotion.Name, emotion.Count))
+
+		return str.String()
+	}
+
+	formatStatistics := func(stat []*storagepb.Category) string {
 		var str strings.Builder
 		str.WriteString("Ваша статистика за неделю:\n\n")
 
-		for category, count := range stat {
-			str.WriteString(fmt.Sprintf("%s - %d\n", category, count))
+		for _, category := range stat {
+			str.WriteString(formatCategory(category))
+
+			for _, emotion := range category.Emotions {
+				str.WriteString(formatEmotion(emotion))
+			}
 		}
 
 		return str.String()
@@ -264,7 +289,7 @@ func GetAllChatIDsFromGRPC() ([]int64, error) {
 	return res.ChatIDs, nil
 }
 
-func GetStatistics(chatId int) (map[string]int32, error) {
+func GetStatistics(chatId int) ([]*storagepb.Category, error) {
 	conn, err := grpc.NewClient("storage:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
@@ -277,5 +302,5 @@ func GetStatistics(chatId int) (map[string]int32, error) {
 		return nil, err
 	}
 
-	return res.Stat, nil
+	return res.Categories, nil
 }
