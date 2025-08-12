@@ -81,7 +81,7 @@ func nextStatisticsTriggerTime(now time.Time) time.Time {
 	nextMonday := now.AddDate(0, 0, daysUntilMonday)
 	year, month, day := nextMonday.Date()
 
-	return time.Date(year, month, day, 10, 0, 0, 0, location)
+	return time.Date(year, month, day, 9, 0, 0, 0, location)
 }
 
 func sendStatistics() error {
