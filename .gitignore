@@ -26,3 +26,6 @@ go.work.sum
 
 # storage data
 storage_data/
+
+# Mac files
+.DS_Store

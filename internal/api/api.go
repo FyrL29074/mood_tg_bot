@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -23,61 +22,8 @@ func StartBot() {
 	InitKafkaWriter()
 	initApi()
 
-	testNewFeatures()
 	SendPhoto(888558026, "Бот запущен!")
 	handleResponses()
-}
-
-var client *http.Client
-
-func testNewFeatures() {
-	stat, err := GetStatistics(888558026)
-	if err != nil {
-		panic(err)
-	}
-
-	formatCategory := func(category *storagepb.Category) string {
-		var str strings.Builder
-
-		counter := 0
-		for _, emotion := range category.Emotions {
-			counter += int(emotion.Count)
-		}
-
-		str.WriteString(fmt.Sprintf("%s - %d\n", category.Name, counter))
-
-		return str.String()
-	}
-
-	formatEmotion := func(emotion *storagepb.Emotion) string {
-		var str strings.Builder
-
-		str.WriteString(fmt.Sprintf("	• %s - %d\n", emotion.Name, emotion.Count))
-
-		return str.String()
-	}
-
-	formatStatistics := func(stat []*storagepb.Category) string {
-		var str strings.Builder
-		str.WriteString("Ваша статистика за неделю:\n\n")
-
-		for _, category := range stat {
-			str.WriteString(formatCategory(category))
-
-			for _, emotion := range category.Emotions {
-				str.WriteString(formatEmotion(emotion))
-			}
-		}
-
-		return str.String()
-	}
-
-	fmt.Println(stat)
-	SendMessage(888558026, formatStatistics(stat), nil)
-}
-
-func initApi() {
-	client = &http.Client{Timeout: 300 * time.Second}
 }
 
 func handleResponses() {
