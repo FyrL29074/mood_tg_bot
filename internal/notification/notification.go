@@ -56,8 +56,6 @@ func nextCategoriesTriggerTime(now time.Time) time.Time {
 }
 
 func SendStatisticsOnMonday() {
-	sendStatistics()
-
 	for {
 		now := time.Now()
 		next := nextStatisticsTriggerTime(now)

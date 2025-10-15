@@ -235,7 +235,7 @@ func GetAllChatIDsFromGRPC() ([]int64, error) {
 	return res.ChatIDs, nil
 }
 
-func GetStatistics(chatId int) ([]*storagepb.Category, error) {
+func GetStatistics(chatId int) ([]Category, error) {
 	conn, err := grpc.NewClient("storage:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
@@ -248,5 +248,21 @@ func GetStatistics(chatId int) ([]*storagepb.Category, error) {
 		return nil, err
 	}
 
-	return res.Categories, nil
+	stats := make([]Category, 2)
+	for _, pbCategory := range res.Categories {
+		var category Category
+		category.Name = pbCategory.Name
+		category.Emotions = make([]Emotion, 1)
+		for _, pbEmotion := range pbCategory.Emotions {
+			var emotion Emotion
+			emotion.Name = pbEmotion.Name
+			emotion.Count = int(pbEmotion.Count)
+
+			category.Emotions = append(category.Emotions, emotion)
+		}
+
+		stats = append(stats, category)
+	}
+
+	return stats, nil
 }

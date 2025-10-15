@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"mood_tg_bot/internal/api"
 	"mood_tg_bot/pb/apipb"
-	"mood_tg_bot/pb/storagepb"
 	"net"
-	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -66,44 +64,8 @@ func (s *server) SendStatistics(ctx context.Context, req *apipb.Empty) (*apipb.R
 			return nil, err
 		}
 
-		api.SendMessage(int(chatID), formatStatistics(stat), nil)
+		api.SendMessage(int(chatID), api.FormatStatistics(stat), nil)
 	}
 
 	return &apipb.Response{Status: "Ok"}, nil
-}
-
-func formatStatistics(stat []*storagepb.Category) string {
-	var str strings.Builder
-	str.WriteString("Ваша статистика за неделю:\n\n")
-
-	for _, category := range stat {
-		str.WriteString(formatCategory(category))
-
-		for _, emotion := range category.Emotions {
-			str.WriteString(formatEmotion(emotion))
-		}
-	}
-
-	return str.String()
-}
-
-func formatCategory(category *storagepb.Category) string {
-	var str strings.Builder
-
-	counter := 0
-	for _, emotion := range category.Emotions {
-		counter += int(emotion.Count)
-	}
-
-	str.WriteString(fmt.Sprintf("%s - %d\n", category.Name, counter))
-
-	return str.String()
-}
-
-func formatEmotion(emotion *storagepb.Emotion) string {
-	var str strings.Builder
-
-	str.WriteString(fmt.Sprintf("	• %s - %d\n", emotion.Name, emotion.Count))
-
-	return str.String()
 }
